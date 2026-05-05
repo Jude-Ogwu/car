@@ -7,17 +7,22 @@
 const SUPABASE_URL = 'https://krrmrowmfkfcdycnfvjg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_a2BPr-FHkue1wQx46vnCwA__vU_oeqM';
 
-let supabase = null;
-if (window.supabase) {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} else {
-  console.warn('Supabase JS SDK not loaded. Ensure the CDN script is included and not blocked.');
+// Lazy getter - only initializes when first called, so data.js never crashes on load
+let _supabaseClient = null;
+function getSupabase() {
+  if (_supabaseClient) return _supabaseClient;
+  if (window.supabase && window.supabase.createClient) {
+    _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return _supabaseClient;
+  }
+  console.error('Supabase SDK not available. Check CDN script tag.');
+  return null;
 }
 
 // ─── Car Store ─────────────────────────────────────────────────────────────
 const CarStore = {
   async getAll() {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('cars')
       .select('*')
       .order('id', { ascending: false });
@@ -30,7 +35,7 @@ const CarStore = {
   },
 
   async getById(id) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('cars')
       .select('*')
       .eq('id', parseInt(id))
@@ -46,8 +51,7 @@ const CarStore = {
   async save(car) {
     let payload = { ...car };
     if (!payload.id) {
-      // New car
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('cars')
         .insert([payload])
         .select()
@@ -58,9 +62,8 @@ const CarStore = {
       }
       return data;
     } else {
-      // Update existing car
       const { id, ...updateData } = payload;
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('cars')
         .update(updateData)
         .eq('id', id)
@@ -75,7 +78,7 @@ const CarStore = {
   },
 
   async delete(id) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('cars')
       .delete()
       .eq('id', parseInt(id));
@@ -86,7 +89,7 @@ const CarStore = {
   },
 
   async updateStatus(id, status) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('cars')
       .update({ status: status })
       .eq('id', parseInt(id));
@@ -120,7 +123,7 @@ const CarStore = {
 // ─── Order Store ───────────────────────────────────────────────────────────
 const OrderStore = {
   async getAll() {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('orders')
       .select('*')
       .order('id', { ascending: false });
@@ -133,7 +136,7 @@ const OrderStore = {
   },
 
   async getById(id) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('orders')
       .select('*')
       .eq('id', parseInt(id))
@@ -147,9 +150,7 @@ const OrderStore = {
   },
 
   async submit(orderData) {
-    // Map the camelCase fields to snake_case if your DB schema requires it, 
-    // or keep it if your table uses camelCase (as per the SQL schema provided earlier).
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('orders')
       .insert([orderData])
       .select()
@@ -163,7 +164,7 @@ const OrderStore = {
   },
 
   async updateStatus(id, status) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('orders')
       .update({ status: status })
       .eq('id', parseInt(id));
@@ -174,7 +175,7 @@ const OrderStore = {
   },
 
   async delete(id) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('orders')
       .delete()
       .eq('id', parseInt(id));
@@ -200,13 +201,13 @@ const OrderStore = {
 // ─── Newsletter Store ──────────────────────────────────────────────────────
 const NewsletterStore = {
   async subscribe(email) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('newsletter_subscribers')
       .insert([{ email: email }]);
 
     if (error) {
-      if (error.code === '23505') { // Unique violation
-        return false; // Already subscribed
+      if (error.code === '23505') {
+        return false;
       }
       console.error('Error subscribing to newsletter:', error);
       return false;
@@ -215,7 +216,7 @@ const NewsletterStore = {
   },
 
   async getAll() {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('newsletter_subscribers')
       .select('*')
       .order('id', { ascending: false });
@@ -367,5 +368,3 @@ const Utils = {
       </div>`;
   }
 };
-
-

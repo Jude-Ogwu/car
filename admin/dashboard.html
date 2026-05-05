@@ -6,11 +6,12 @@
     <title>Dashboard — CarVoyage Admin</title>
     <link rel="shortcut icon" href="../assets/media/favicon.png">
     <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/vendor/font-awesome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body class="admin-body">
-<!-- Sidebar -->
+
 <div class="admin-sidebar" id="sidebar">
     <div class="sidebar-brand">
         <img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo">
@@ -19,14 +20,14 @@
     <nav class="sidebar-nav">
         <a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
         <a href="cars.html" class="nav-item"><i class="fa-solid fa-car"></i><span>Manage Cars</span></a>
-        <a href="orders.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders & Inquiries</span></a>
+        <a href="orders.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders &amp; Inquiries</span></a>
         <hr class="sidebar-divider">
         <a href="../index.html" class="nav-item" target="_blank"><i class="fa-solid fa-globe"></i><span>View Website</span></a>
         <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
     </nav>
 </div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-<!-- Main Content -->
 <div class="admin-main">
     <header class="admin-topbar">
         <button class="sidebar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
@@ -38,7 +39,6 @@
     </header>
 
     <div class="admin-content">
-        <!-- Stats Cards -->
         <div class="row g-4 mb-4">
             <div class="col-lg-3 col-sm-6">
                 <div class="stat-card stat-blue">
@@ -79,7 +79,6 @@
         </div>
 
         <div class="row g-4">
-            <!-- Recent Inquiries -->
             <div class="col-lg-8">
                 <div class="admin-card">
                     <div class="admin-card-header">
@@ -96,7 +95,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Quick Inventory -->
             <div class="col-lg-4">
                 <div class="admin-card">
                     <div class="admin-card-header">
@@ -116,47 +114,70 @@
     </div>
 </div>
 
+<script src="../assets/js/vendor/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/data.js"></script>
+<script src="../assets/js/data.js"></script>
 <script>
     AdminAuth.requireAuth();
 
-    // Sidebar toggle
-    document.getElementById('sidebar-toggle').addEventListener('click', function(){
-        document.getElementById('sidebar').classList.toggle('collapsed');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        } else {
+            sidebar.classList.toggle('collapsed');
+        }
+    }
+
+    document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', function() {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
     });
-    document.getElementById('logout-btn').addEventListener('click', function(e){
+
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
         e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
     });
 
-    // Load stats
-    var carStats = await CarStore.getStats();
-    var orderStats = await OrderStore.getStats();
-    document.getElementById('stat-total-cars').textContent = carStats.total;
-    document.getElementById('stat-available').textContent = carStats.available;
-    document.getElementById('stat-new-orders').textContent = orderStats.newOrders;
-    document.getElementById('stat-revenue').textContent = '$' + orderStats.revenue.toLocaleString();
-    document.getElementById('inv-available').textContent = carStats.available;
-    document.getElementById('inv-sold').textContent = carStats.sold;
-    document.getElementById('inv-total').textContent = carStats.total;
-    document.getElementById('inv-avg').textContent = '$' + carStats.avgPrice.toLocaleString();
+    (async function() {
+        try {
+            var carStats = await CarStore.getStats();
+            var orderStats = await OrderStore.getStats();
 
-    // Recent orders
-    var orders = (await OrderStore.getAll()).slice(0, 5);
-    var statusColors = { 'New': 'warning', 'In Progress': 'info', 'Closed': 'success' };
-    var tbody = document.getElementById('recent-orders-tbody');
-    if (!orders.length) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No inquiries yet.</td></tr>';
-    } else {
-        tbody.innerHTML = orders.map(function(o) {
-            var d = new Date(o.dateSubmitted).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-            return '<tr><td><strong>' + o.customerName + '</strong><br><small class="text-muted">' + o.email + '</small></td>' +
-                '<td>' + o.carName + '</td>' +
-                '<td>$' + (o.totalPrice||0).toLocaleString() + '</td>' +
-                '<td><span class="badge bg-' + (statusColors[o.status]||'secondary') + '">' + o.status + '</span></td>' +
-                '<td>' + d + '</td></tr>';
-        }).join('');
-    }
+            document.getElementById('stat-total-cars').textContent = carStats.total;
+            document.getElementById('stat-available').textContent = carStats.available;
+            document.getElementById('stat-new-orders').textContent = orderStats.newOrders;
+            document.getElementById('stat-revenue').textContent = '$' + orderStats.revenue.toLocaleString();
+            document.getElementById('inv-available').textContent = carStats.available;
+            document.getElementById('inv-sold').textContent = carStats.sold;
+            document.getElementById('inv-total').textContent = carStats.total;
+            document.getElementById('inv-avg').textContent = '$' + carStats.avgPrice.toLocaleString();
+
+            var orders = (await OrderStore.getAll()).slice(0, 5);
+            var statusColors = { 'New': 'warning', 'In Progress': 'info', 'Closed': 'success' };
+            var tbody = document.getElementById('recent-orders-tbody');
+            if (!orders.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No inquiries yet.</td></tr>';
+            } else {
+                tbody.innerHTML = orders.map(function(o) {
+                    var d = new Date(o.dateSubmitted || o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    return '<tr>' +
+                        '<td><strong>' + o.customerName + '</strong><br><small class="text-muted">' + o.email + '</small></td>' +
+                        '<td>' + o.carName + '</td>' +
+                        '<td>$' + (o.totalPrice || 0).toLocaleString() + '</td>' +
+                        '<td><span class="badge bg-' + (statusColors[o.status] || 'secondary') + '">' + o.status + '</span></td>' +
+                        '<td>' + d + '</td></tr>';
+                }).join('');
+            }
+        } catch (err) {
+            console.error('Dashboard load error:', err);
+            document.getElementById('recent-orders-tbody').innerHTML =
+                '<tr><td colspan="5" class="text-center text-danger py-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>Could not load data. Check Supabase connection.</td></tr>';
+        }
+    })();
 </script>
 </body>
 </html>
