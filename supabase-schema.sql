@@ -168,15 +168,11 @@ VALUES
     'assets/media/blog/blog-2.jpg', NULL
 );
 
--- ── 6. SEED SAMPLE ORDERS ─────────────────────────────────
 INSERT INTO public.orders (car_id, car_name, customer_name, email, phone, message, status, total_price)
 VALUES
 (1, '2024 Tesla Model 3',  'James Anderson', 'james@example.com',        '+1 (555) 234-5678', 'I''m very interested in the Tesla Model 3. Can we arrange a test drive this weekend?', 'New',         42500),
 (5, '2024 Acura MDX',      'Sarah Collins',  'sarah.collins@email.com',  '+1 (555) 876-5432', 'Looking for a 3-row family SUV. The MDX seems perfect. What financing options are available?', 'In Progress', 57000),
 (7, '2024 Porsche Macan',  'Michael Torres', 'm.torres@business.com',    '+1 (555) 123-9876', 'I want to purchase the Porsche Macan EV. I can pay cash. What''s the fastest way to complete the deal?', 'Closed', 68500);
-
--- ── 7. CATEGORIES TABLE ────────────────────────────────────────────────────────
--- Run this in your Supabase SQL Editor to add category management support.
 
 CREATE TABLE IF NOT EXISTS public.categories (
     id          BIGSERIAL    PRIMARY KEY,

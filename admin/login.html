@@ -59,7 +59,7 @@
     <script src="../assets/js/data.js"></script>
     <script>
         // Redirect if already logged in
-        if (typeof AdminAuth !== 'undefined' && AdminAuth.isAuthenticated()) window.location.href = 'dashboard.html';
+        if (typeof AdminAuth !== 'undefined' && AdminAuth.isLoggedIn()) window.location.href = 'dashboard.html';
 
         document.getElementById('toggle-pass').addEventListener('click', function() {
             var inp = document.getElementById('password');
