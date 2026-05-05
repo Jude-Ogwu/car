@@ -1,0 +1,33 @@
+.banner-1-sec {
+    padding-top: clamp(40px, 2.396vw, 54px);
+    padding-bottom: 0;
+    background-image: url('../media/about/banner-1.png');
+    background-repeat: no-repeat;
+    background-size: inherit;
+    background-position: 60% 100%;
+    // background-size: 100%;
+    background-color: $accent-1;
+    position: relative;
+    height: clamp(240px, 18.698vw, 610px);
+    display: flex;
+    align-items: center;
+
+    @include media-query(768px) {
+        background-size: 70%;
+        background-position: 60% 50%;
+    }
+
+    .banner-block {
+        row-gap: 12px;
+        flex-wrap: wrap;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .banner-icon {
+            img {
+                width: clamp(340px, 28.79vw, 610px);
+            }
+        }
+    }
+}

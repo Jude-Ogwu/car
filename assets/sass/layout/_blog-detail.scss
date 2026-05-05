@@ -1,0 +1,216 @@
+.qoute {
+    background-color: $black;
+    padding: clamp(18px, 1.25vw, 48px);
+    border-radius: $br-12;
+    border-left: 2px solid $accent-1;
+}
+
+.over-ear-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: $gap-24;
+    flex-wrap: wrap;
+
+    .over-ear {
+        flex-wrap: wrap;
+        display: flex;
+        align-items: center;
+        gap: $gap-16;
+
+        .over-ear-content {
+            cursor: pointer;
+            border-radius: 4px;
+            background-color: $accent-1;
+            border: 1px solid $accent-1;
+            color: $white !important;
+            padding: clamp(4px, 0.417vw, 16px) clamp(8px, 0.625vw, 24px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: $transition;
+
+            &:hover {
+                transition: $transition;
+                background-color: transparent;
+                border: 1px solid $accent-1;
+
+                p {
+                    transition: $transition;
+                    color: $accent-1 !important;
+                }
+            }
+        }
+    }
+
+    .share-wrapper {
+        display: flex;
+        align-items: center;
+        gap: $gap-8;
+    }
+
+    .share-svg {
+        width: clamp(24px, 1.667vw, 64px);
+        height: clamp(24px, 1.667vw, 64px);
+        padding: clamp(4px, 0.417vw, 16px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid $accent-1;
+        border-radius: 4px;
+        background-color: transparent;
+        border: 1px solid $accent-1;
+        transition: $transition;
+
+        svg {
+            path {
+                fill: $accent-1;
+                transition: $transition;
+            }
+        }
+
+        &:hover {
+            transition: $transition;
+            background-color: $accent-1;
+
+            svg {
+                path {
+                    transition: $transition;
+                    fill: $white;
+                }
+            }
+        }
+    }
+
+}
+
+.blog-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .blog-list-wrapper {
+        display: flex;
+        align-items: center;
+        gap: $gap-16;
+    flex-wrap: wrap;
+    }
+
+    .arrow-left {
+        width: clamp(24px, 1.667vw, 64px);
+        height: clamp(24px, 1.667vw, 64px);
+        padding: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: $transition;
+        border: 1px solid $black;
+
+        &:hover {
+            border: 1px solid $accent-1;
+            background-color: $accent-1;
+            transition: $transition;
+
+            svg {
+                path {
+                    fill: $white;
+                }
+            }
+        }
+    }
+
+    .arrow-right {
+        background-color: $accent-1;
+        transition: $transition;
+        border: none;
+
+        &:hover {
+            transition: $transition;
+            background-color: $white;
+
+            svg {
+                path {
+                    stroke: $accent-1;
+                    transition: $transition;
+
+                }
+            }
+        }
+    }
+
+    .subtitle {
+        font-size: clamp(12px, 0.833vw, 32px);
+    }
+}
+
+.review-card {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(12px, 0.833vw, 32px);
+
+    .review-img {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .text-block {
+        width: 100%;
+
+        p {
+            color: $black;
+            font-size: clamp(16px, 1.042vw, 40px);
+        }
+
+
+        .subtitle {
+            font-size: clamp(12px, 0.833vw, 32px);
+        }
+    }
+
+    .review-img {
+        img {
+            border-radius: 4px;
+        }
+    }
+}
+
+.review-card-2 {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(12px, 0.833vw, 32px);
+    padding-left: clamp(12px, 4.583vw, 120px);
+
+    .img {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .review-img {
+        img {
+            border-radius: 4px;
+        }
+    }
+
+    .text-block {
+        width: 100%;
+
+        p {
+            color: $black;
+            font-size: clamp(16px, 1.042vw, 40px);
+        }
+
+        .subtitle {
+            font-size: clamp(12px, 0.833vw, 32px);
+        }
+    }
+}
+
+.contect-sec {
+
+    .form-control-3 {
+        border: 1px solid $dark-gray;
+        border-radius: 4px;
+        padding: clamp(14px, 0.938vw, 36px) clamp(12px, 0.833vw, 32px);
+    }
+}

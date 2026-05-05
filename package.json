@@ -1,0 +1,12 @@
+{
+  "name": "carvoyage",
+  "version": "1.0.0",
+  "description": "CarVoyage - Premium Car Sales Website",
+  "scripts": {
+    "start": "npx live-server --port=3000 --open=index.html",
+    "preview": "npx live-server --port=3000 --open=index.html"
+  },
+  "keywords": ["car", "sales", "dealership"],
+  "author": "CarVoyage",
+  "license": "ISC"
+}

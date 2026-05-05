@@ -1,0 +1,75 @@
+.car-overview {
+    .car-slider {
+        position: relative;
+
+        .slider-arrows-content {
+            position: absolute;
+            right: clamp(28px, 2.5vw, 68px);
+            bottom: clamp(28px, 2.5vw, 68px);
+        }
+    }
+
+    .car-overview-content {
+        row-gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        .content-1 {
+            display: flex;
+            align-items: center;
+            padding: clamp(4px, 0.417vw, 16px) clamp(18px, 1.25vw, 48px);
+            background-color: $white;
+            border: 1px solid $dark-gray;
+            border-radius: 48px;
+            gap: $gap-12;
+            color: $black;
+            transition: $transition;
+
+            svg {
+                width: clamp(40px, 2.5vw, 54px);
+                transition: $transition;
+            }
+
+            &:hover {
+                background-color: $black;
+                color: $white !important;
+
+                p {
+                    color: $white !important;
+                    transition: $transition;
+                }
+
+                svg {
+                    path {
+                        fill: $white;
+                        transition: $transition;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .car-features {
+        display: flex;
+        align-items: center;
+        gap: $gap-12;
+        text-align: left;
+    }
+
+    .vehicle-details {
+        border-radius: $br-12;
+        background-color: $lightest-gray;
+        padding: clamp(18px, 1.25vw, 48px);
+    }
+
+    .vehicle-content {
+        flex-wrap: wrap;
+        row-gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

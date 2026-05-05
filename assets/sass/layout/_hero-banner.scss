@@ -1,0 +1,41 @@
+.hero-banner {
+  background-image: url('../media/hero/hero-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: clamp(110px, 22.813vw, 518px) 0 clamp(150px, 10.938vw, 280px) 0;
+  // height: 100vh;
+
+  @include media-query(992px) {
+    height: 100%;
+    background-position: center;
+
+  }
+
+  .hero-content {
+    h2 {
+      @include media-query(560px) {
+        br {
+          display: none;
+        }
+      }
+    }
+
+    .dropdown-content {
+      flex-wrap: wrap;
+      display: flex;
+      align-items: center;
+      gap: clamp(24px, 5vw, 170px);
+
+      .input-border {
+        border-bottom: 1px solid $accent-1 !important;
+      }
+      @include media-query(560px) {
+        .input-border {
+          border-bottom: 1px solid $accent-1 !important;
+          width: 100%;
+        }
+      }
+    }
+
+  }
+}
