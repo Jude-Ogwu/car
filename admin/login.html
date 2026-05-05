@@ -79,12 +79,19 @@
             document.getElementById('login-text').classList.add('d-none');
             document.getElementById('login-spinner').classList.remove('d-none');
 
-            setTimeout(async function() {
-                let success = AdminAuth.login(username, password);
-                if (success) {
-                    window.location.href = 'dashboard.html';
-                } else {
-                    errEl.classList.remove('d-none');
+                        setTimeout(function() {
+                try {
+                    let success = AdminAuth.login(username, password);
+                    if (success) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        errEl.classList.remove('d-none');
+                        btn.disabled = false;
+                        document.getElementById('login-text').classList.remove('d-none');
+                        document.getElementById('login-spinner').classList.add('d-none');
+                    }
+                } catch (e) {
+                    alert('Login Error: ' + e.message);
                     btn.disabled = false;
                     document.getElementById('login-text').classList.remove('d-none');
                     document.getElementById('login-spinner').classList.add('d-none');
@@ -94,6 +101,7 @@
     </script>
 </body>
 </html>
+
 
 
 
