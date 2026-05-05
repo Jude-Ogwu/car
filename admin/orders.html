@@ -12,10 +12,15 @@
 </head>
 <body class="admin-body">
 <div class="admin-sidebar" id="sidebar">
-    <div class="sidebar-brand"><img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo"><span class="sidebar-label">Admin</span></div>
+    <div class="sidebar-brand">
+        <img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo">
+        <span class="sidebar-label">Admin</span>
+        <button class="sidebar-close-btn" id="sidebar-close" title="Close menu"><i class="fa-solid fa-xmark"></i></button>
+    </div>
     <nav class="sidebar-nav">
         <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
         <a href="cars.html" class="nav-item"><i class="fa-solid fa-car"></i><span>Manage Cars</span></a>
+        <a href="categories.html" class="nav-item"><i class="fa-solid fa-tags"></i><span>Categories</span></a>
         <a href="orders.html" class="nav-item active"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders &amp; Inquiries</span></a>
         <hr class="sidebar-divider">
         <a href="../index.html" class="nav-item" target="_blank"><i class="fa-solid fa-globe"></i><span>View Website</span></a>
@@ -35,18 +40,10 @@
 
     <div class="admin-content">
         <div class="row g-3 mb-4">
-            <div class="col-md-3 col-6">
-                <div class="mini-stat"><div class="mini-stat-val text-warning" id="os-new">–</div><div class="mini-stat-label">New</div></div>
-            </div>
-            <div class="col-md-3 col-6">
-                <div class="mini-stat"><div class="mini-stat-val text-info" id="os-inprogress">–</div><div class="mini-stat-label">In Progress</div></div>
-            </div>
-            <div class="col-md-3 col-6">
-                <div class="mini-stat"><div class="mini-stat-val text-success" id="os-closed">–</div><div class="mini-stat-label">Closed</div></div>
-            </div>
-            <div class="col-md-3 col-6">
-                <div class="mini-stat"><div class="mini-stat-val text-primary" id="os-revenue">–</div><div class="mini-stat-label">Revenue</div></div>
-            </div>
+            <div class="col-md-3 col-6"><div class="mini-stat"><div class="mini-stat-val text-warning" id="os-new">–</div><div class="mini-stat-label">New</div></div></div>
+            <div class="col-md-3 col-6"><div class="mini-stat"><div class="mini-stat-val text-info" id="os-inprogress">–</div><div class="mini-stat-label">In Progress</div></div></div>
+            <div class="col-md-3 col-6"><div class="mini-stat"><div class="mini-stat-val text-success" id="os-closed">–</div><div class="mini-stat-label">Closed</div></div></div>
+            <div class="col-md-3 col-6"><div class="mini-stat"><div class="mini-stat-val text-primary" id="os-revenue">–</div><div class="mini-stat-label">Revenue</div></div></div>
         </div>
 
         <div class="admin-card mb-4">
@@ -66,10 +63,7 @@
             <div class="table-responsive">
                 <table class="table admin-table mb-0">
                     <thead>
-                        <tr>
-                            <th>#ID</th><th>Customer</th><th>Car Interested In</th>
-                            <th>Price</th><th>Message</th><th>Status</th><th>Date</th><th>Actions</th>
-                        </tr>
+                        <tr><th>#ID</th><th>Customer</th><th>Car</th><th>Price</th><th>Message</th><th>Status</th><th>Date</th><th>Actions</th></tr>
                     </thead>
                     <tbody id="orders-tbody">
                         <tr><td colspan="8" class="text-center py-4 text-muted">Loading orders...</td></tr>
@@ -108,18 +102,15 @@
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('sidebar-overlay');
 
+    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+
     document.getElementById('sidebar-toggle').addEventListener('click', function() {
-        if (window.innerWidth <= 768) {
-            sidebar.classList.toggle('mobile-open');
-            overlay.classList.toggle('active');
-        } else {
-            sidebar.classList.toggle('collapsed');
-        }
+        if (window.innerWidth <= 768) { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); }
+        else { sidebar.classList.toggle('collapsed'); }
     });
-    overlay.addEventListener('click', function() {
-        sidebar.classList.remove('mobile-open');
-        overlay.classList.remove('active');
-    });
+    document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
     document.getElementById('logout-btn').addEventListener('click', function(e) {
         e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
     });
@@ -142,8 +133,9 @@
         var status = document.getElementById('filter-order-status').value;
         var orders = (await OrderStore.getAll()).filter(function(o) {
             if (status && o.status !== status) return false;
-            if (search && !(o.customerName||'').toLowerCase().includes(search) &&
-                !(o.carName||'').toLowerCase().includes(search) &&
+            if (search &&
+                !(o.customer_name||'').toLowerCase().includes(search) &&
+                !(o.car_name||'').toLowerCase().includes(search) &&
                 !(o.email||'').toLowerCase().includes(search)) return false;
             return true;
         });
@@ -154,15 +146,15 @@
             return;
         }
         tbody.innerHTML = orders.map(function(o) {
-            var d = new Date(o.dateSubmitted || o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            var d = new Date(o.date_submitted || o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             var msg = o.message ? (o.message.length > 50 ? o.message.substring(0, 50) + '...' : o.message) : '–';
             return '<tr>' +
                 '<td><strong>#' + o.id + '</strong></td>' +
-                '<td><strong>' + (o.customerName||'') + '</strong><br><small class="text-muted">' + (o.email||'') + '</small><br><small>' + (o.phone||'') + '</small></td>' +
-                '<td>' + (o.carName||'') + '</td>' +
-                '<td>$' + ((o.totalPrice || 0)).toLocaleString() + '</td>' +
+                '<td><strong>' + (o.customer_name||'–') + '</strong><br><small class="text-muted">' + (o.email||'') + '</small><br><small>' + (o.phone||'') + '</small></td>' +
+                '<td>' + (o.car_name||'–') + '</td>' +
+                '<td>$' + (o.total_price||0).toLocaleString() + '</td>' +
                 '<td><small class="text-muted">' + msg + '</small></td>' +
-                '<td><span class="badge bg-' + (statusColors[o.status] || 'secondary') + '">' + o.status + '</span></td>' +
+                '<td><span class="badge bg-' + (statusColors[o.status]||'secondary') + '">' + o.status + '</span></td>' +
                 '<td>' + d + '</td>' +
                 '<td>' +
                 '<button class="btn btn-sm btn-outline-primary me-1" onclick="viewOrder(' + o.id + ')"><i class="fa-solid fa-eye"></i></button>' +
@@ -175,14 +167,14 @@
         var o = await OrderStore.getById(id);
         if (!o) return;
         currentOrderId = id;
-        var d = new Date(o.dateSubmitted || o.created_at).toLocaleString('en-US');
+        var d = new Date(o.date_submitted || o.created_at).toLocaleString('en-US');
         document.getElementById('order-detail-body').innerHTML =
             '<dl class="row">' +
-            '<dt class="col-4">Customer</dt><dd class="col-8"><strong>' + (o.customerName||'–') + '</strong></dd>' +
+            '<dt class="col-4">Customer</dt><dd class="col-8"><strong>' + (o.customer_name||'–') + '</strong></dd>' +
             '<dt class="col-4">Email</dt><dd class="col-8"><a href="mailto:' + (o.email||'') + '">' + (o.email||'–') + '</a></dd>' +
             '<dt class="col-4">Phone</dt><dd class="col-8">' + (o.phone||'–') + '</dd>' +
-            '<dt class="col-4">Car</dt><dd class="col-8">' + (o.carName||'–') + '</dd>' +
-            '<dt class="col-4">Price</dt><dd class="col-8">$' + (o.totalPrice||0).toLocaleString() + '</dd>' +
+            '<dt class="col-4">Car</dt><dd class="col-8">' + (o.car_name||'–') + '</dd>' +
+            '<dt class="col-4">Price</dt><dd class="col-8">$' + (o.total_price||0).toLocaleString() + '</dd>' +
             '<dt class="col-4">Status</dt><dd class="col-8"><span class="badge bg-' + (statusColors[o.status]||'secondary') + '">' + o.status + '</span></dd>' +
             '<dt class="col-4">Date</dt><dd class="col-8">' + d + '</dd>' +
             '<dt class="col-4">Message</dt><dd class="col-8">' + (o.message||'–') + '</dd></dl>';
@@ -200,17 +192,13 @@
     document.getElementById('btn-mark-progress').addEventListener('click', async function() {
         if (!currentOrderId) return;
         await OrderStore.updateStatus(currentOrderId, 'In Progress');
-        orderModal.hide();
-        renderOrders();
-        loadStats();
+        orderModal.hide(); renderOrders(); loadStats();
     });
 
     document.getElementById('btn-mark-closed').addEventListener('click', async function() {
         if (!currentOrderId) return;
         await OrderStore.updateStatus(currentOrderId, 'Closed');
-        orderModal.hide();
-        renderOrders();
-        loadStats();
+        orderModal.hide(); renderOrders(); loadStats();
     });
 
     document.getElementById('order-search').addEventListener('keyup', renderOrders);

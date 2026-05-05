@@ -16,10 +16,12 @@
     <div class="sidebar-brand">
         <img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo">
         <span class="sidebar-label">Admin</span>
+        <button class="sidebar-close-btn" id="sidebar-close" title="Close menu"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <nav class="sidebar-nav">
         <a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
         <a href="cars.html" class="nav-item"><i class="fa-solid fa-car"></i><span>Manage Cars</span></a>
+        <a href="categories.html" class="nav-item"><i class="fa-solid fa-tags"></i><span>Categories</span></a>
         <a href="orders.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders &amp; Inquiries</span></a>
         <hr class="sidebar-divider">
         <a href="../index.html" class="nav-item" target="_blank"><i class="fa-solid fa-globe"></i><span>View Website</span></a>
@@ -123,20 +125,15 @@
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('sidebar-overlay');
 
-    function toggleSidebar() {
-        if (window.innerWidth <= 768) {
-            sidebar.classList.toggle('mobile-open');
-            overlay.classList.toggle('active');
-        } else {
-            sidebar.classList.toggle('collapsed');
-        }
-    }
+    function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); }
+    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
 
-    document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
-    overlay.addEventListener('click', function() {
-        sidebar.classList.remove('mobile-open');
-        overlay.classList.remove('active');
+    document.getElementById('sidebar-toggle').addEventListener('click', function() {
+        if (window.innerWidth <= 768) { openSidebar(); }
+        else { sidebar.classList.toggle('collapsed'); }
     });
+    document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
 
     document.getElementById('logout-btn').addEventListener('click', function(e) {
         e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
@@ -163,11 +160,11 @@
                 tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No inquiries yet.</td></tr>';
             } else {
                 tbody.innerHTML = orders.map(function(o) {
-                    var d = new Date(o.dateSubmitted || o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    var d = new Date(o.date_submitted || o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     return '<tr>' +
-                        '<td><strong>' + o.customerName + '</strong><br><small class="text-muted">' + o.email + '</small></td>' +
-                        '<td>' + o.carName + '</td>' +
-                        '<td>$' + (o.totalPrice || 0).toLocaleString() + '</td>' +
+                        '<td><strong>' + (o.customer_name || '–') + '</strong><br><small class="text-muted">' + (o.email || '') + '</small></td>' +
+                        '<td>' + (o.car_name || '–') + '</td>' +
+                        '<td>$' + (o.total_price || 0).toLocaleString() + '</td>' +
                         '<td><span class="badge bg-' + (statusColors[o.status] || 'secondary') + '">' + o.status + '</span></td>' +
                         '<td>' + d + '</td></tr>';
                 }).join('');
@@ -175,7 +172,7 @@
         } catch (err) {
             console.error('Dashboard load error:', err);
             document.getElementById('recent-orders-tbody').innerHTML =
-                '<tr><td colspan="5" class="text-center text-danger py-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>Could not load data. Check Supabase connection.</td></tr>';
+                '<tr><td colspan="5" class="text-center text-danger py-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>Could not load data. Check console.</td></tr>';
         }
     })();
 </script>

@@ -1,13 +1,14 @@
 /**
- * CarVoyage - Data Layer
- * Car inventory + orders managed via Supabase
+ * CarVoyage — Data Layer
+ * Central data access layer for Cars, Orders, and Categories via Supabase.
+ * All CRUD operations live here. Import data.js before using any Store.
  */
 
-// ─── SUPABASE CONFIGURATION ────────────────────────────────────────────────
-const SUPABASE_URL = 'https://krrmrowmfkfcdycnfvjg.supabase.co';
+// ─── SUPABASE CONFIGURATION ──────────────────────────────────────────────────
+const SUPABASE_URL     = 'https://krrmrowmfkfcdycnfvjg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_a2BPr-FHkue1wQx46vnCwA__vU_oeqM';
 
-// Lazy getter - only initializes when first called, so data.js never crashes on load
+// Lazy initialiser — safe even if CDN script loads slightly after this file
 let _supabaseClient = null;
 function getSupabase() {
   if (_supabaseClient) return _supabaseClient;
@@ -15,356 +16,247 @@ function getSupabase() {
     _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     return _supabaseClient;
   }
-  console.error('Supabase SDK not available. Check CDN script tag.');
+  console.error('Supabase SDK not loaded yet. Ensure the CDN <script> comes before data.js.');
   return null;
 }
 
-// ─── Car Store ─────────────────────────────────────────────────────────────
+// ─── ADMIN AUTH ───────────────────────────────────────────────────────────────
+const AdminAuth = {
+  CREDENTIALS: { username: 'admin', password: 'carvoyage2024' },
+  login(username, password) {
+    if (username === this.CREDENTIALS.username && password === this.CREDENTIALS.password) {
+      sessionStorage.setItem('cv_admin', 'true');
+      return true;
+    }
+    return false;
+  },
+  isLoggedIn()  { return sessionStorage.getItem('cv_admin') === 'true'; },
+  logout()      { sessionStorage.removeItem('cv_admin'); },
+  requireAuth() {
+    if (!this.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+  }
+};
+
+// ─── CAR STORE ────────────────────────────────────────────────────────────────
 const CarStore = {
+
   async getAll() {
-    const { data, error } = await getSupabase()
+    const sb = getSupabase(); if (!sb) return [];
+    const { data, error } = await sb
       .from('cars')
       .select('*')
       .order('id', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching cars:', error);
-      return [];
-    }
+    if (error) { console.error('getAll cars:', error); return []; }
     return data || [];
   },
 
   async getById(id) {
-    const { data, error } = await getSupabase()
+    const sb = getSupabase(); if (!sb) return null;
+    const { data, error } = await sb
       .from('cars')
       .select('*')
       .eq('id', parseInt(id))
       .single();
-
-    if (error) {
-      console.error('Error fetching car details:', error);
-      return null;
-    }
+    if (error) { console.error('getById car:', error); return null; }
     return data;
   },
 
   async save(car) {
-    let payload = { ...car };
-    if (!payload.id) {
-      const { data, error } = await getSupabase()
+    const sb = getSupabase(); if (!sb) return null;
+
+    // Strip any undefined / null keys that might conflict with DB defaults
+    const clean = {};
+    const allowed = [
+      'name','brand','category','year','price','mileage','fuel','transmission',
+      'color','engine','horsepower','seats','condition','status','rating','reviews',
+      'description','features','images','thumbnail','badge'
+    ];
+    allowed.forEach(k => { if (car[k] !== undefined && car[k] !== '') clean[k] = car[k]; });
+
+    // Ensure numeric fields are numbers, not strings
+    ['year','price','mileage','horsepower','seats','reviews'].forEach(k => {
+      if (clean[k] !== undefined) clean[k] = Number(clean[k]) || 0;
+    });
+    if (clean.rating !== undefined) clean.rating = parseFloat(clean.rating) || 4.5;
+
+    // Ensure images is always an array
+    if (!Array.isArray(clean.images)) {
+      clean.images = clean.thumbnail ? [clean.thumbnail] : [];
+    }
+
+    const isNew = !car.id;
+
+    if (isNew) {
+      // INSERT — do NOT send id at all; let the DB auto-generate it
+      const { data, error } = await sb
         .from('cars')
-        .insert([payload])
+        .insert([clean])
         .select()
         .single();
-      if (error) {
-        console.error('Error adding car:', error);
-        return null;
-      }
+      if (error) { console.error('insert car error:', error); alert('Error saving car: ' + error.message); return null; }
       return data;
     } else {
-      const { id, ...updateData } = payload;
-      const { data, error } = await getSupabase()
+      // UPDATE — send only the data fields, filter by id
+      const { data, error } = await sb
         .from('cars')
-        .update(updateData)
-        .eq('id', id)
+        .update(clean)
+        .eq('id', parseInt(car.id))
         .select()
         .single();
-      if (error) {
-        console.error('Error updating car:', error);
-        return null;
-      }
+      if (error) { console.error('update car error:', error); alert('Error updating car: ' + error.message); return null; }
       return data;
     }
   },
 
   async delete(id) {
-    const { error } = await getSupabase()
-      .from('cars')
-      .delete()
-      .eq('id', parseInt(id));
-
-    if (error) {
-      console.error('Error deleting car:', error);
-    }
+    const sb = getSupabase(); if (!sb) return;
+    const { error } = await sb.from('cars').delete().eq('id', parseInt(id));
+    if (error) { console.error('delete car:', error); }
   },
 
   async updateStatus(id, status) {
-    const { error } = await getSupabase()
-      .from('cars')
-      .update({ status: status })
-      .eq('id', parseInt(id));
-
-    if (error) {
-      console.error('Error updating status:', error);
-    }
+    const sb = getSupabase(); if (!sb) return;
+    const { error } = await sb.from('cars').update({ status }).eq('id', parseInt(id));
+    if (error) { console.error('updateStatus car:', error); }
   },
 
   async getStats() {
     const cars = await this.getAll();
     return {
-      total: cars.length,
+      total:     cars.length,
       available: cars.filter(c => c.status === 'Available').length,
-      sold: cars.filter(c => c.status === 'Sold').length,
-      avgPrice: cars.length > 0 ? Math.round(cars.reduce((a, c) => a + c.price, 0) / cars.length) : 0
+      sold:      cars.filter(c => c.status === 'Sold').length,
+      avgPrice:  cars.length > 0
+        ? Math.round(cars.reduce((a, c) => a + Number(c.price), 0) / cars.length)
+        : 0
     };
   },
 
-  async getBrands() {
-    const cars = await this.getAll();
-    return [...new Set(cars.map(c => c.brand))].sort();
-  },
-
-  async getCategories() {
-    const cars = await this.getAll();
-    return [...new Set(cars.map(c => c.category))].sort();
-  }
+  async getBrands()     { const c = await this.getAll(); return [...new Set(c.map(x => x.brand))].sort(); },
+  async getCategories() { const c = await this.getAll(); return [...new Set(c.map(x => x.category))].sort(); }
 };
 
-// ─── Order Store ───────────────────────────────────────────────────────────
-const OrderStore = {
-  async getAll() {
-    const { data, error } = await getSupabase()
-      .from('orders')
-      .select('*')
-      .order('id', { ascending: false });
+// ─── CATEGORY STORE ───────────────────────────────────────────────────────────
+const CategoryStore = {
 
+  async getAll() {
+    const sb = getSupabase(); if (!sb) return [];
+    const { data, error } = await sb
+      .from('categories')
+      .select('*')
+      .order('name', { ascending: true });
     if (error) {
-      console.error('Error fetching orders:', error);
-      return [];
+      // Fallback: derive categories from existing cars if table doesn't exist yet
+      console.warn('categories table not found, falling back to car categories:', error.message);
+      return (await CarStore.getCategories()).map((name, i) => ({ id: i + 1, name }));
     }
     return data || [];
   },
 
+  async add(name, description) {
+    const sb = getSupabase(); if (!sb) return null;
+    const { data, error } = await sb
+      .from('categories')
+      .insert([{ name: name.trim(), description: description || '' }])
+      .select()
+      .single();
+    if (error) { console.error('add category:', error); alert('Error: ' + error.message); return null; }
+    return data;
+  },
+
+  async delete(id) {
+    const sb = getSupabase(); if (!sb) return;
+    const { error } = await sb.from('categories').delete().eq('id', parseInt(id));
+    if (error) { console.error('delete category:', error); }
+  }
+};
+
+// ─── ORDER STORE ──────────────────────────────────────────────────────────────
+const OrderStore = {
+
+  async getAll() {
+    const sb = getSupabase(); if (!sb) return [];
+    const { data, error } = await sb
+      .from('orders')
+      .select('*')
+      .order('id', { ascending: false });
+    if (error) { console.error('getAll orders:', error); return []; }
+    return data || [];
+  },
+
   async getById(id) {
-    const { data, error } = await getSupabase()
+    const sb = getSupabase(); if (!sb) return null;
+    const { data, error } = await sb
       .from('orders')
       .select('*')
       .eq('id', parseInt(id))
       .single();
-
-    if (error) {
-      console.error('Error fetching order details:', error);
-      return null;
-    }
+    if (error) { console.error('getById order:', error); return null; }
     return data;
   },
 
   async submit(orderData) {
-    const { data, error } = await getSupabase()
+    const sb = getSupabase(); if (!sb) return null;
+    // Always use snake_case to match the DB schema exactly
+    const payload = {
+      car_id:        orderData.carId        || orderData.car_id        || null,
+      car_name:      orderData.carName      || orderData.car_name      || '',
+      customer_name: orderData.customerName || orderData.customer_name || '',
+      email:         orderData.email        || '',
+      phone:         orderData.phone        || '',
+      message:       orderData.message      || '',
+      total_price:   Number(orderData.totalPrice || orderData.total_price || 0),
+      status:        orderData.status       || 'New'
+    };
+    const { data, error } = await sb
       .from('orders')
-      .insert([orderData])
+      .insert([payload])
       .select()
       .single();
-
-    if (error) {
-      console.error('Error submitting order:', error);
-      return null;
-    }
+    if (error) { console.error('submit order:', error); return null; }
     return data;
   },
 
-  async updateStatus(id, status) {
-    const { error } = await getSupabase()
-      .from('orders')
-      .update({ status: status })
-      .eq('id', parseInt(id));
-
-    if (error) {
-      console.error('Error updating order status:', error);
-    }
+  async delete(id) {
+    const sb = getSupabase(); if (!sb) return;
+    const { error } = await sb.from('orders').delete().eq('id', parseInt(id));
+    if (error) { console.error('delete order:', error); }
   },
 
-  async delete(id) {
-    const { error } = await getSupabase()
-      .from('orders')
-      .delete()
-      .eq('id', parseInt(id));
-
-    if (error) {
-      console.error('Error deleting order:', error);
-    }
+  async updateStatus(id, status) {
+    const sb = getSupabase(); if (!sb) return;
+    const { error } = await sb.from('orders').update({ status }).eq('id', parseInt(id));
+    if (error) { console.error('updateStatus order:', error); }
   },
 
   async getStats() {
     const orders = await this.getAll();
     const closed = orders.filter(o => o.status === 'Closed');
     return {
-      total: orders.length,
-      newOrders: orders.filter(o => o.status === 'New').length,
+      total:      orders.length,
+      newOrders:  orders.filter(o => o.status === 'New').length,
       inProgress: orders.filter(o => o.status === 'In Progress').length,
-      closed: closed.length,
-      revenue: closed.reduce((a, o) => a + (Number(o.totalPrice) || 0), 0)
+      closed:     closed.length,
+      revenue:    closed.reduce((a, o) => a + (Number(o.total_price) || 0), 0)
     };
   }
 };
 
-// ─── Newsletter Store ──────────────────────────────────────────────────────
+// ─── NEWSLETTER STORE ─────────────────────────────────────────────────────────
 const NewsletterStore = {
   async subscribe(email) {
-    const { error } = await getSupabase()
-      .from('newsletter_subscribers')
-      .insert([{ email: email }]);
-
-    if (error) {
-      if (error.code === '23505') {
-        return false;
-      }
-      console.error('Error subscribing to newsletter:', error);
-      return false;
+    const sb = getSupabase(); if (!sb) return null;
+    const { data, error } = await sb
+      .from('newsletter')
+      .insert([{ email: email.trim().toLowerCase() }])
+      .select()
+      .single();
+    if (error && error.code !== '23505') { // 23505 = unique violation (already subscribed)
+      console.error('newsletter subscribe:', error);
+      return null;
     }
-    return true;
-  },
-
-  async getAll() {
-    const { data, error } = await getSupabase()
-      .from('newsletter_subscribers')
-      .select('*')
-      .order('id', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching subscribers:', error);
-      return [];
-    }
-    return data || [];
-  }
-};
-
-// ─── Admin Auth ────────────────────────────────────────────────────────────
-const AdminAuth = {
-  CREDENTIALS: { username: 'admin', password: 'carvoyage2024' },
-  SESSION_KEY: 'carvoyage_admin_session',
-
-  login(username, password) {
-    if (username === this.CREDENTIALS.username && password === this.CREDENTIALS.password) {
-      sessionStorage.setItem(this.SESSION_KEY, 'true');
-      return true;
-    }
-    return false;
-  },
-
-  isAuthenticated() {
-    return sessionStorage.getItem(this.SESSION_KEY) === 'true';
-  },
-
-  logout() {
-    sessionStorage.removeItem(this.SESSION_KEY);
-  },
-
-  requireAuth() {
-    if (!this.isAuthenticated()) {
-      window.location.href = 'login.html';
-    }
-  }
-};
-
-// ─── Utility Helpers ───────────────────────────────────────────────────────
-const Utils = {
-  formatPrice(price) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(price || 0);
-  },
-
-  formatNumber(n) {
-    return new Intl.NumberFormat('en-US').format(n || 0);
-  },
-
-  formatDate(dateStr) {
-    if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      year: 'numeric', month: 'short', day: 'numeric'
-    });
-  },
-
-  getQueryParam(key) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(key);
-  },
-
-  renderStars(rating) {
-    const r = Number(rating) || 0;
-    const full = Math.floor(r);
-    const half = r % 1 >= 0.5;
-    let html = '';
-    for (let i = 0; i < full; i++) html += '<i class="fa-solid fa-star text-warning"></i>';
-    if (half) html += '<i class="fa-solid fa-star-half-stroke text-warning"></i>';
-    for (let i = Math.ceil(r); i < 5; i++) html += '<i class="fa-regular fa-star text-warning"></i>';
-    return html;
-  },
-
-  badgeClass(badge) {
-    const map = {
-      'Hot Deal': 'bg-danger',
-      'Popular': 'bg-primary',
-      'Best Value': 'bg-success',
-      'Luxury': 'bg-warning text-dark',
-      'New Arrival': 'bg-info text-dark',
-      "Editor's Choice": 'bg-secondary'
-    };
-    return map[badge] || 'bg-primary';
-  },
-
-  carCardHTML(car) {
-    const price = Utils.formatPrice(car.price);
-    const mileage = Utils.formatNumber(car.mileage);
-    const badge = car.badge ? `<span class="car-badge ${Utils.badgeClass(car.badge)}">${car.badge}</span>` : '';
-    const statusClass = car.status === 'Sold' ? 'sold-overlay' : '';
-    const soldBadge = car.status === 'Sold' ? '<div class="sold-stamp">SOLD</div>' : '';
-    const images = Array.isArray(car.images) ? car.images : (typeof car.images === 'string' ? JSON.parse(car.images || '[]') : []);
-    const thumbnail = car.thumbnail || (images.length > 0 ? images[0] : 'assets/media/blog/blog-1.jpg');
-
-    return `
-      <div class="col-xxl-3 col-xl-4 col-sm-6">
-        <div class="blog-1 car-card">
-          <div class="blog-img ${statusClass}">
-            ${badge}
-            ${soldBadge}
-            <a href="car-details.html?id=${car.id}">
-              <img src="${thumbnail}" alt="${car.name}" onerror="this.src='assets/media/blog/blog-1.jpg'">
-            </a>
-          </div>
-          <div class="blog-content">
-            <p class="subtitle black mb-4">${car.category} · ${car.year}</p>
-            <div class="d-flex align-items-center justify-content-between mb-36">
-              <a href="car-details.html?id=${car.id}" class="h6 hover-content fw-500 black">${car.name}</a>
-              <h5 class="fw-600 color-primary">${price}</h5>
-            </div>
-            <div class="d-flex align-items-center justify-content-between mb-36">
-              <div>
-                <div class="d-flex align-items-center gap-16 mb-16">
-                  <img src="assets/media/icons/manual-transmission.png" alt="">
-                  <p class="fw-600 black">${car.transmission}</p>
-                </div>
-                <div class="d-flex align-items-center gap-16">
-                  <img src="assets/media/icons/fuel.png" alt="">
-                  <p class="fw-600 black">${car.fuel}</p>
-                </div>
-              </div>
-              <div>
-                <div class="d-flex align-items-center gap-16 mb-16">
-                  <img src="assets/media/icons/speedometer.png" alt="">
-                  <p class="fw-600 black">${mileage} Km</p>
-                </div>
-                <div class="d-flex align-items-center gap-16">
-                  <img src="assets/media/icons/disc-brake.png" alt="">
-                  <p class="fw-600 black">${car.condition}</p>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-                <p class="black">Rating: <span class="h6 fw-500">${car.rating} </span>
-                <span class="h6 color-primary"><i class="fa-solid fa-star"></i></span></p>
-              </div>
-              <div>
-                <a href="car-details.html?id=${car.id}" class="text-decoration-underline p hover-content">View Details</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>`;
+    return data;
   }
 };

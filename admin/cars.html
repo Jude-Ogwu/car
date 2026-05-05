@@ -20,10 +20,11 @@
 </head>
 <body class="admin-body">
 <div class="admin-sidebar" id="sidebar">
-    <div class="sidebar-brand"><img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo"><span class="sidebar-label">Admin</span></div>
+    <div class="sidebar-brand"><img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo"><span class="sidebar-label">Admin</span><button class="sidebar-close-btn" id="sidebar-close" title="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
     <nav class="sidebar-nav">
         <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
         <a href="cars.html" class="nav-item active"><i class="fa-solid fa-car"></i><span>Manage Cars</span></a>
+        <a href="categories.html" class="nav-item"><i class="fa-solid fa-tags"></i><span>Categories</span></a>
         <a href="orders.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders &amp; Inquiries</span></a>
         <hr class="sidebar-divider">
         <a href="../index.html" class="nav-item" target="_blank"><i class="fa-solid fa-globe"></i><span>View Website</span></a>
@@ -100,18 +101,7 @@
                         <div class="col-md-4">
                             <label class="form-label fw-600">Category *</label>
                             <select id="car-category" class="form-select" required onchange="handleCategoryChange(this)">
-                                <option value="">Select...</option>
-                                <option value="Sedan">Sedan</option>
-                                <option value="SUV">SUV</option>
-                                <option value="Coupe">Coupe</option>
-                                <option value="Wagon">Wagon</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Truck">Truck</option>
-                                <option value="Van">Van</option>
-                                <option value="Hatchback">Hatchback</option>
-                                <option value="Convertible">Convertible</option>
-                                <option value="Electric">Electric</option>
-                                <option value="__custom__">+ Add New Category</option>
+                                <option value="">Loading categories...</option>
                             </select>
                             <input type="text" id="car-category-custom" class="form-control mt-2 d-none" placeholder="Type new category name...">
                         </div>
@@ -238,18 +228,14 @@
     var sidebar = document.getElementById('sidebar');
     var overlay = document.getElementById('sidebar-overlay');
 
+    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+
     document.getElementById('sidebar-toggle').addEventListener('click', function() {
-        if (window.innerWidth <= 768) {
-            sidebar.classList.toggle('mobile-open');
-            overlay.classList.toggle('active');
-        } else {
-            sidebar.classList.toggle('collapsed');
-        }
+        if (window.innerWidth <= 768) { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); }
+        else { sidebar.classList.toggle('collapsed'); }
     });
-    overlay.addEventListener('click', function() {
-        sidebar.classList.remove('mobile-open');
-        overlay.classList.remove('active');
-    });
+    document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
     document.getElementById('logout-btn').addEventListener('click', function(e) {
         e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
     });
@@ -258,17 +244,26 @@
     var editingId = null;
     var uploadedImageData = null; // stores base64 data URL from file upload
 
-    // ── Category custom input ──────────────────────────────────
+    // ── Category dropdown: load from DB ──────────────────────────────────────
+    async function loadCategories() {
+        var cats = await CategoryStore.getAll();
+        var sel = document.getElementById('car-category');
+        var current = sel.value;
+        sel.innerHTML = '<option value="">Select category...</option>' +
+            cats.map(function(c) {
+                return '<option value="' + c.name + '">' + c.name + '</option>';
+            }).join('') +
+            '<option value="__custom__">&#43; Manage Categories</option>';
+        if (current) sel.value = current;
+    }
+
+    // ── Category custom-input toggle ──────────────────────────────────────────
     function handleCategoryChange(sel) {
-        var customInput = document.getElementById('car-category-custom');
         if (sel.value === '__custom__') {
-            customInput.classList.remove('d-none');
-            customInput.required = true;
-            customInput.focus();
-        } else {
-            customInput.classList.add('d-none');
-            customInput.required = false;
-            customInput.value = '';
+            if (confirm('To add or remove categories, go to the Categories management page?')) {
+                window.open('categories.html', '_blank');
+            }
+            sel.value = '';
         }
     }
 
@@ -381,15 +376,17 @@
         document.getElementById('car-name').value = car.name;
         document.getElementById('car-brand').value = car.brand;
 
-        // Handle category - if not in list, set custom
+        // Reload categories then set the car's category value
+        await loadCategories();
         var catSel = document.getElementById('car-category');
-        var knownCats = Array.from(catSel.options).map(function(o) { return o.value; });
-        if (car.category && !knownCats.includes(car.category)) {
-            catSel.value = '__custom__';
-            document.getElementById('car-category-custom').classList.remove('d-none');
-            document.getElementById('car-category-custom').value = car.category;
-        } else {
-            catSel.value = car.category || '';
+        catSel.value = car.category || '';
+        // If category not found in dropdown (added directly via DB), insert it temporarily
+        if (car.category && catSel.value !== car.category) {
+            var tempOpt = document.createElement('option');
+            tempOpt.value = car.category;
+            tempOpt.textContent = car.category;
+            catSel.insertBefore(tempOpt, catSel.querySelector('[value="__custom__"]') || catSel.lastElementChild);
+            catSel.value = car.category;
         }
 
         document.getElementById('car-year').value = car.year;
@@ -489,6 +486,7 @@
 
     document.getElementById('car-search').addEventListener('keyup', renderCars);
     document.getElementById('filter-status').addEventListener('change', renderCars);
+    loadCategories();
     renderCars();
 </script>
 </body>

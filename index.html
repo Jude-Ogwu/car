@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2236,6 +2236,35 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/data.js"></script>
     <script src="assets/js/app.js"></script>
+
+<script>
+    // Dynamically update all static "car-details.html" links with proper ?id= params
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            var cars = await CarStore.getAll();
+            var published = cars.filter(function(c) { return c.status !== 'Draft'; });
+
+            // Update all static car-details links that have no ?id= param
+            document.querySelectorAll('a[href="car-details.html"]').forEach(function(link) {
+                var card = link.closest('.blog-1') || link.parentElement;
+                var nameEl = card ? card.querySelector('.h6, .fw-500, h6, h5, h4') : null;
+                var nameText = nameEl ? nameEl.textContent.trim().toLowerCase() : '';
+                var match = published.find(function(c) {
+                    return c.name.toLowerCase().includes(nameText) || nameText.includes(c.name.toLowerCase().substring(0, 10));
+                });
+                if (!match) match = published[0]; // fallback to first car
+                if (match) link.href = 'car-details.html?id=' + match.id;
+            });
+
+            // Also update any "booking.html" links similarly
+            document.querySelectorAll('a[href="booking.html"]').forEach(function(link, i) {
+                if (published[i]) link.href = 'booking.html?id=' + published[i].id;
+            });
+        } catch(e) {
+            console.log('Link update:', e);
+        }
+    });
+</script>
 
 </body>
 

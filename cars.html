@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1562,7 +1562,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="subtitle fw-400 lightest-gray">© 2026 — Copyright</p>
+                        <p class="subtitle fw-400 lightest-gray">ï¿½ 2026 ï¿½ Copyright</p>
                     </div>
                 </div>
             </div>
@@ -1614,27 +1614,27 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-                function renderCars(cars) {
+    document.addEventListener('DOMContentLoaded', async function() {
+
+        var allCars = await CarStore.getAll();
+
+        function renderCars(cars) {
             var html = '';
-            if (!cars.length) {
+            if (!cars || !cars.length) {
                 html = '<div class="col-12 text-center py-5"><h5 class="text-muted">No cars found matching your filters.</h5></div>';
             } else {
                 cars.forEach(function(car) {
-                    var price = '
-
-</html>
-
- + car.price.toLocaleString();
-                    var mileage = car.mileage.toLocaleString();
+                    if (car.status === 'Draft') return; // hide drafts from public
+                    var price = '$' + car.price.toLocaleString();
                     var badge = car.badge ? '<span class="position-absolute top-0 start-0 m-2 badge bg-warning text-dark">' + car.badge + '</span>' : '';
                     var sold = car.status === 'Sold' ? '<div class="position-absolute top-0 end-0 m-2 badge bg-danger fs-6">SOLD</div>' : '';
+                    var mileage = (car.mileage || 0).toLocaleString();
                     html += '<div class="col-xxl-3 col-xl-4 col-sm-6">' +
                         '<div class="blog-1">' +
                         '<div class="blog-img position-relative">' + badge + sold +
-                        '<a href="car-details.html?id=' + car.id + '"><img src="' + car.thumbnail + '" alt="' + car.name + '" onerror="this.src=\'assets/media/blog/blog-1.jpg\'"></a></div>' +
+                        '<a href="car-details.html?id=' + car.id + '"><img src="' + (car.thumbnail || 'assets/media/blog/blog-1.jpg') + '" alt="' + car.name + '" onerror="this.src=\'assets/media/blog/blog-1.jpg\'"></a></div>' +
                         '<div class="blog-content">' +
-                        '<p class="subtitle black mb-4">' + car.category + ' · ' + car.year + '</p>' +
+                        '<p class="subtitle black mb-4">' + car.category + ' &middot; ' + car.year + '</p>' +
                         '<div class="d-flex align-items-center justify-content-between mb-36">' +
                         '<a href="car-details.html?id=' + car.id + '" class="h6 hover-content fw-500 black">' + car.name + '</a>' +
                         '<h5 class="fw-600 color-primary">' + price + '</h5></div>' +
@@ -1642,50 +1642,48 @@
                         '<div><div class="d-flex align-items-center gap-16 mb-16"><img src="assets/media/icons/manual-transmission.png" alt=""><p class="fw-600 black">' + car.transmission + '</p></div>' +
                         '<div class="d-flex align-items-center gap-16"><img src="assets/media/icons/fuel.png" alt=""><p class="fw-600 black">' + car.fuel + '</p></div></div>' +
                         '<div><div class="d-flex align-items-center gap-16 mb-16"><img src="assets/media/icons/speedometer.png" alt=""><p class="fw-600 black">' + mileage + ' Km</p></div>' +
-                        '<div class="d-flex align-items-center gap-16"><img src="assets/media/icons/disc-brake.png" alt=""><p class="fw-600 black">' + car.condition + '</p></div></div></div>' +
+                        '<div class="d-flex align-items-center gap-16"><img src="assets/media/icons/disc-brake.png" alt=""><p class="fw-600 black">' + (car.condition || 'New') + '</p></div></div></div>' +
                         '<div class="d-flex align-items-center justify-content-between">' +
-                        '<p class="black">Rating: <span class="h6 fw-500">' + car.rating + '</span> <span class="h6 color-primary"><i class="fa-solid fa-star"></i></span></p>' +
+                        '<p class="black">Rating: <span class="h6 fw-500">' + (car.rating || 4.5) + '</span> <span class="h6 color-primary"><i class="fa-solid fa-star"></i></span></p>' +
                         '<a href="car-details.html?id=' + car.id + '" class="text-decoration-underline p hover-content">View Details</a></div>' +
                         '</div></div></div>';
                 });
             }
-            document.querySelectorAll('#nav-desc .row.row-gap-4, #nav-review .row.row-gap-4').forEach(function(el){ el.innerHTML = html; });
+            document.querySelectorAll('#nav-desc .row.row-gap-4, #nav-review .row.row-gap-4').forEach(function(el) { el.innerHTML = html; });
         }
 
-        function applyFilters() {
+        async function applyFilters() {
             var search = (document.getElementById('car-search') || {value:''}).value.toLowerCase();
             var category = (document.getElementById('filter-category') || {value:''}).value;
             var fuel = (document.getElementById('filter-fuel') || {value:''}).value;
             var condition = (document.getElementById('filter-condition') || {value:''}).value;
             var sort = (document.getElementById('filter-sort') || {value:'default'}).value;
 
-            var cars = (await CarStore.getAll()).filter(function(c) {
+            var cars = allCars.filter(function(c) {
+                if (c.status === 'Draft') return false;
                 if (category && c.category !== category) return false;
                 if (fuel && c.fuel !== fuel) return false;
                 if (condition && c.condition !== condition) return false;
-                if (search && !c.name.toLowerCase().includes(search) && !c.brand.toLowerCase().includes(search)) return false;
+                if (search && !(c.name||'').toLowerCase().includes(search) && !(c.brand||'').toLowerCase().includes(search)) return false;
                 return true;
             });
 
-            if (sort === 'price-low') cars.sort(function(a,b){return a.price - b.price;});
-            else if (sort === 'price-high') cars.sort(function(a,b){return b.price - a.price;});
-            else if (sort === 'newest') cars.sort(function(a,b){return new Date(b.dateAdded) - new Date(a.dateAdded);});
+            if (sort === 'price-low') cars.sort(function(a,b){ return a.price - b.price; });
+            else if (sort === 'price-high') cars.sort(function(a,b){ return b.price - a.price; });
+            else if (sort === 'newest') cars.sort(function(a,b){ return new Date(b.created_at) - new Date(a.created_at); });
 
             renderCars(cars);
         }
 
-        ['car-search','filter-category','filter-fuel','filter-condition','filter-sort'].forEach(function(id){
+        ['car-search','filter-category','filter-fuel','filter-condition','filter-sort'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.addEventListener('change', applyFilters);
             if (el && el.tagName === 'INPUT') el.addEventListener('keyup', applyFilters);
         });
 
-                renderCars(await CarStore.getAll());
+        renderCars(allCars);
     });
-    </script>
+</script>
 </body>
 
 </html>
-
-
-
