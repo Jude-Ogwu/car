@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Car Categories - CarVoyage</title>
+    <meta name="description" content="Browse CarVoyage vehicles by category — Sedan, SUV, Electric, Luxury and more.">
+    <link rel="shortcut icon" href="assets/media/favicon.png">
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <style>
+        .cat-hero { background:linear-gradient(135deg,#0a0a0a 0%,#1a1a2e 100%);padding:70px 0 50px;text-align:center; }
+        .cat-card { background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:transform .25s,box-shadow .25s;cursor:pointer;text-decoration:none;display:block; }
+        .cat-card:hover { transform:translateY(-6px);box-shadow:0 12px 32px rgba(0,0,0,0.14); }
+        .cat-card-img { width:100%;height:180px;object-fit:cover;background:#f1f5f9; }
+        .cat-card-img-placeholder { width:100%;height:180px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center; }
+        .cat-card-body { padding:20px; }
+        .cat-card-body h6 { font-weight:700;color:#1a1a2e;margin-bottom:6px; }
+        .cat-card-body p { font-size:13px;color:#6b7280;margin-bottom:10px; }
+        .cat-count { display:inline-block;background:#fff4e5;color:#f5a623;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700; }
+        .cat-icon { font-size:2.5rem;color:rgba(245,166,35,0.8); }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container-fluid">
+        <nav class="main-menu">
+            <div class="main-menu__logo">
+                <a href="index.html"><img src="assets/media/logo.png" alt="CarVoyage" style="height:40px;"></a>
+            </div>
+            <div class="main-menu__nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li class="has-sub active"><a href="javascript:void(0);" class="active">Listing</a>
+                        <ul>
+                            <li><a href="cars.html">Cars</a></li>
+                            <li><a href="categories.html" class="active">Car Categories</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="main-menu__right">
+                <div class="search-heart-icon d-sm-flex d-none align-items-center gap-24">
+                    <a class="cus-btn" href="request-car.html">
+                        <span class="text">Request a Car</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="cat-hero">
+    <div class="container">
+        <p style="color:#f5a623;letter-spacing:2px;font-size:12px;text-transform:uppercase;font-weight:600;margin-bottom:10px;">Browse by Type</p>
+        <h2 style="color:#fff;font-weight:700;font-size:2.4rem;margin-bottom:12px;">Vehicle Categories</h2>
+        <p style="color:rgba(255,255,255,0.6);max-width:520px;margin:0 auto;">Find your perfect car by category. Click any category to browse matching vehicles.</p>
+    </div>
+</section>
+
+<!-- BREADCRUMB -->
+<div style="background:#f8f9fa;padding:14px 0;border-bottom:1px solid #e9ecef;">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0" style="font-size:13px;">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Categories</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- CATEGORIES GRID -->
+<section style="padding:70px 0;background:#f8f9fa;">
+    <div class="container-fluid">
+        <div class="row g-4" id="categories-grid">
+            <!-- Loading state -->
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-warning" role="status" style="width:3rem;height:3rem;"></div>
+                <p class="text-muted mt-3">Loading categories...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:60px 0;text-align:center;">
+    <div class="container">
+        <h4 style="color:#fff;font-weight:700;margin-bottom:10px;">Can't find what you're looking for?</h4>
+        <p style="color:rgba(255,255,255,0.6);margin-bottom:24px;">Submit a car request and our team will source it for you within 24 hours.</p>
+        <a href="request-car.html" class="cus-btn" style="display:inline-flex;">
+            <span class="text">Request a Car</span>
+        </a>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;text-align:center;">
+            <p style="color:rgba(255,255,255,0.4);font-size:13px;">&copy; 2024 CarVoyage. All rights reserved. &nbsp;|&nbsp;
+                <a href="index.html" style="color:rgba(255,255,255,0.4);">Home</a> &nbsp;|&nbsp;
+                <a href="cars.html" style="color:rgba(255,255,255,0.4);">Browse Cars</a> &nbsp;|&nbsp;
+                <a href="contact.html" style="color:rgba(255,255,255,0.4);">Contact</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/vendor/bootstrap.min.js"></script>
+<script>
+(async function() {
+    var grid = document.getElementById('categories-grid');
+    var DEFAULTS = ['Sedan','SUV','Coupe','Sports','Electric','Luxury','Truck','Hatchback','Convertible','Hybrid','Van','Wagon'];
+    var icons = { 'Sedan':'fa-car','SUV':'fa-truck-monster','Coupe':'fa-car-side','Sports':'fa-flag-checkered',
+        'Electric':'fa-bolt','Luxury':'fa-gem','Truck':'fa-truck','Hatchback':'fa-car-rear',
+        'Convertible':'fa-wind','Hybrid':'fa-leaf','Van':'fa-van-shuttle','Wagon':'fa-car' };
+
+    var cats = [];
+    var allCars = [];
+    try {
+        cats = await CategoryStore.getAll();
+        allCars = await CarStore.getAll();
+    } catch(e) {}
+
+    if (!cats || !cats.length) {
+        cats = DEFAULTS.map(function(n,i){ return { id:i+1, name:n, status:'Published' }; });
+    }
+
+    // Filter to only published categories that have at least 0 cars
+    var published = cats.filter(function(c){ return c.status !== 'Draft'; });
+
+    if (!published.length) {
+        grid.innerHTML = '<div class="col-12 text-center text-muted py-5"><h5>No categories available yet.</h5><a href="cars.html" class="btn btn-warning mt-3">Browse All Cars</a></div>';
+        return;
+    }
+
+    grid.innerHTML = published.map(function(cat) {
+        var count = allCars.filter(function(c){ return c.category === cat.name && c.status !== 'Draft'; }).length;
+        var icon  = icons[cat.name] || 'fa-car';
+        var imgHtml = cat.thumbnail
+            ? '<img src="' + cat.thumbnail + '" class="cat-card-img" alt="' + cat.name + '" onerror="this.parentElement.innerHTML=\'<div class=cat-card-img-placeholder><i class=fa-solid\\ ' + icon + '\\ cat-icon></i></div>\'">'
+            : '<div class="cat-card-img-placeholder"><i class="fa-solid ' + icon + ' cat-icon"></i></div>';
+        return '<div class="col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-sm-6">' +
+            '<a href="cars.html?category=' + encodeURIComponent(cat.name) + '" class="cat-card">' +
+            imgHtml +
+            '<div class="cat-card-body">' +
+            '<h6>' + cat.name + '</h6>' +
+            (cat.description ? '<p>' + cat.description + '</p>' : '') +
+            '<span class="cat-count">' + count + ' car' + (count !== 1 ? 's' : '') + '</span>' +
+            '</div></a></div>';
+    }).join('');
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,10 @@
+
 /**
  * Vehicle Dealers Hub — Data Layer
+
+﻿/**
+ * CarVoyage — Data Layer
+
  * Central data access layer for Cars, Orders, and Categories via Supabase.
  * All CRUD operations live here. Import data.js before using any Store.
  */
@@ -145,33 +150,45 @@ const CategoryStore = {
 
   async getAll() {
     const sb = getSupabase(); if (!sb) return [];
-    const { data, error } = await sb
-      .from('categories')
-      .select('*')
-      .order('name', { ascending: true });
+    const { data, error } = await sb.from('categories').select('*').order('name',{ascending:true});
     if (error) {
-      // Fallback: derive categories from existing cars if table doesn't exist yet
-      console.warn('categories table not found, falling back to car categories:', error.message);
-      return (await CarStore.getCategories()).map((name, i) => ({ id: i + 1, name }));
+      console.warn('categories fallback:', error.message);
+      return (await CarStore.getCategories()).map((name,i)=>({id:i+1,name,status:'Published'}));
     }
     return data || [];
   },
 
-  async add(name, description) {
+  async add(name, description, thumbnail, status) {
     const sb = getSupabase(); if (!sb) return null;
-    const { data, error } = await sb
-      .from('categories')
-      .insert([{ name: name.trim(), description: description || '' }])
-      .select()
-      .single();
+    const payload = { name: name.trim(), description: description || '', status: status || 'Published' };
+    if (thumbnail) payload.thumbnail = thumbnail;
+    const { data, error } = await sb.from('categories').insert([payload]).select().single();
     if (error) { console.error('add category:', error); alert('Error: ' + error.message); return null; }
     return data;
+  },
+
+  async update(id, fields) {
+    const sb = getSupabase(); if (!sb) return null;
+    const allowed = ['name','description','thumbnail','status'];
+    const payload = {};
+    allowed.forEach(k => { if (fields[k] !== undefined) payload[k] = fields[k]; });
+    const { data, error } = await sb.from('categories').update(payload).eq('id',parseInt(id)).select().single();
+    if (error) { console.error('update category:', error); alert('Error: '+error.message); return null; }
+    return data;
+  },
+
+  async toggleStatus(id, currentStatus) {
+    return this.update(id, { status: currentStatus === 'Published' ? 'Draft' : 'Published' });
   },
 
   async delete(id) {
     const sb = getSupabase(); if (!sb) return;
     const { error } = await sb.from('categories').delete().eq('id', parseInt(id));
-    if (error) { console.error('delete category:', error); }
+    if (error) console.error('delete category:', error);
+  },
+
+  async getCars(categoryName) {
+    return (await CarStore.getAll()).filter(c => c.category === categoryName && c.status !== 'Draft');
   }
 };
 

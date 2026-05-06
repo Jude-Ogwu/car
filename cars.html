@@ -14,8 +14,7 @@
 
     <!-- All CSS files -->
 
-        <link rel="stylesheet" href="assets/css/vendor/font-awesome.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/vendor/slick.css">
     <link rel="stylesheet" href="assets/css/vendor/slick-theme.css">
@@ -73,7 +72,11 @@
                                     <a href="javascript:void(0); " class="active">Catalogue</a>
                                     <ul>
                                         <li> <a href="cars.html">Cars</a></li>
+
                                         
+
+                                        <li> <a href="categories.html">Car Categories</a></li>
+
                                     </ul>
                                 </li>
 
@@ -87,8 +90,13 @@
                     </div>
                     <div class="main-menu__right">
                         <div class="search-heart-icon d-sm-flex d-none align-items-center gap-24">
+
                             <a class="cus-btn" href="cars.html">
                                 <span class="text">Explore Now</span>
+
+                            <a class="cus-btn" href="request-car.html">
+                                <span class="text">Request a Car</span>
+
                                 <span class="">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                         fill="none">
@@ -1140,13 +1148,15 @@
         </section>
         <!-- BLOG ARTICLE Section END -->
 
-        <!-- Explore Our Premium Fleet START -->
-        <section class="fleet-sec py-80">
+        <!-- Browse by Category START -->
+        <section id="categories" class="py-80" style="background:#fff;">
             <div class="container-fluid">
-                <div class="black mb-48">
-                    <p>Explore Our Premium Fleet</p>
-                    <h4>Top Car Brands Available for You</h4>
+                <div class="mb-48 text-center">
+                    <p class="subtitle" style="color:#f5a623;letter-spacing:2px;text-transform:uppercase;font-weight:600;">Filter by Type</p>
+                    <h4>Browse by Category</h4>
+                    <p style="color:#6b7280;margin-top:8px;">Select a category to explore cars in that segment</p>
                 </div>
+
                 <div class="row row-gap-4">
                     <div class="col-lg-3 col-sm-6">
                         <div class="our-fleet">
@@ -1156,6 +1166,68 @@
                       </defs>
                     </svg>
                   </a>
+
+                <div class="row g-3 justify-content-center" id="categories-grid">
+                    <div class="col-12 text-center"><div class="spinner-border text-warning" role="status"></div></div>
+                </div>
+            </div>
+        </section>
+        <!-- Browse by Category END -->
+        <!-- Explore Our Premium Fleet END -->
+
+        <!-- car updates section START -->
+        <!-- car updates section END -->
+
+        <!-- FOOTER START -->
+        <footer class="footer">
+            <div class="">
+                <div class="footer-wrapper">
+                    <div class="footer-sec-1">
+                        <div class="mb-96">
+                            <img class="mb-24" src="assets/media/footer-logo.png" alt="">
+                            <p class="fw-600 lightest-gray mb-48">The first free end-to-end analytics service for the
+                                site,<br>
+                                designed to
+                                work with enterprises.</p>
+                            <a href="contact.html" class="cus-btn-2">Learn More</a>
+                        </div>
+                        <div>
+                            <p class="color-primary fw-600 mb-16">News Letter</p>
+                            <form action="index.html" method="post">
+                                <div class="newsletter">
+                                    <input type="email" id="newsletter" class="form-control newsletter-form"
+                                        placeholder="Your Email ID">
+                                    <button type="submit" class="border-0 rounded-0 cus-btn-2">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="footer-sec-2">
+                        <div class="content-info">
+                            <div class="addresse">
+                                <p class="fw-600 color-primary mb-24">Address</p>
+                                <p class="white mb-24">24, Main Road Mississippi<br>
+                                    United States - 24185 15 </p>
+                                <p class="white">65, Main Boulevard Tennesi<br>
+                                    United States - 25491 28 </p>
+                            </div>
+                            <div class="contect-number">
+                                <div>
+                                    <p class="fw-600 color-primary mb-16">Contact</p>
+                                </div>
+                                <div>
+                                    <a href="tel:+13232751718" class="hover-content white">+1 (323) 275-1718</a><br>
+                                    <a href="mailto:hello@logoipsum.com"
+                                        class="hover-content white">hello@logoipsum.com</a>
+                                </div>
+                            </div>
+                            <div class="footer-social-icon">
+                                <div>
+                                    <p class="color-primary mb-16 fw-600">Follow us</p>
+                                </div>
+                                <div class="links">
+
                                     <a href="" class="menu-link-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
                       <g clip-path="url(#clip0_11680_3832)">
@@ -1232,6 +1304,7 @@
 
 
     <script>
+
 document.addEventListener('DOMContentLoaded', async function() {
     // Load categories first
     try {
@@ -1241,6 +1314,95 @@ document.addEventListener('DOMContentLoaded', async function() {
         categories.forEach(cat => {
             const option = new Option(cat.name, cat.name);
             catSelect.appendChild(option);
+
+    document.addEventListener('DOMContentLoaded', async function() {
+
+        var allCars = await CarStore.getAll();
+        loadCategoryGrid();
+        // Auto-apply URL ?category= param if present
+        var urlParams = new URLSearchParams(window.location.search);
+        var urlCat = urlParams.get('category');
+        if (urlCat) {
+            var selEl = document.getElementById('filter-category');
+            if (selEl) { selEl.value = urlCat; }
+            var catSection = document.getElementById('categories');
+            if (catSection) setTimeout(function(){ catSection.scrollIntoView({behavior:'smooth'}); }, 400);
+        }
+
+        function renderCars(cars) {
+            var html = '';
+            if (!cars || !cars.length) {
+                html = '<div class="col-12 text-center py-5"><h5 class="text-muted">No cars found matching your filters.</h5></div>';
+            } else {
+                cars.forEach(function(car) {
+                    if (car.status === 'Draft') return; // hide drafts from public
+                    var price = '$' + car.price.toLocaleString();
+                    var badge = car.badge ? '<span class="position-absolute top-0 start-0 m-2 badge bg-warning text-dark">' + car.badge + '</span>' : '';
+                    var sold = car.status === 'Sold' ? '<div class="position-absolute top-0 end-0 m-2 badge bg-danger fs-6">SOLD</div>' : '';
+                    var mileage = (car.mileage || 0).toLocaleString();
+                    html += '<div class="col-xxl-3 col-xl-4 col-sm-6">' +
+                        '<div class="blog-1">' +
+                        '<div class="blog-img position-relative">' + badge + sold +
+                        '<a href="car-details.html?id=' + car.id + '"><img src="' + (car.thumbnail || 'assets/media/blog/blog-1.jpg') + '" alt="' + car.name + '" onerror="this.src=\'assets/media/blog/blog-1.jpg\'"></a></div>' +
+                        '<div class="blog-content">' +
+                        '<p class="subtitle black mb-4">' + car.category + ' &middot; ' + car.year + '</p>' +
+                        '<div class="d-flex align-items-center justify-content-between mb-36">' +
+                        '<a href="car-details.html?id=' + car.id + '" class="h6 hover-content fw-500 black">' + car.name + '</a>' +
+                        '<h5 class="fw-600 color-primary">' + price + '</h5></div>' +
+                        '<div class="d-flex align-items-center justify-content-between mb-36">' +
+                        '<div><div class="d-flex align-items-center gap-16 mb-16"><img src="assets/media/icons/manual-transmission.png" alt=""><p class="fw-600 black">' + car.transmission + '</p></div>' +
+                        '<div class="d-flex align-items-center gap-16"><img src="assets/media/icons/fuel.png" alt=""><p class="fw-600 black">' + car.fuel + '</p></div></div>' +
+                        '<div><div class="d-flex align-items-center gap-16 mb-16"><img src="assets/media/icons/speedometer.png" alt=""><p class="fw-600 black">' + mileage + ' Km</p></div>' +
+                        '<div class="d-flex align-items-center gap-16"><img src="assets/media/icons/disc-brake.png" alt=""><p class="fw-600 black">' + (car.condition || 'New') + '</p></div></div></div>' +
+                        '<div class="d-flex align-items-center justify-content-between">' +
+                        '<p class="black">Rating: <span class="h6 fw-500">' + (car.rating || 4.5) + '</span> <span class="h6 color-primary"><i class="fa-solid fa-star"></i></span></p>' +
+                        '<a href="car-details.html?id=' + car.id + '" class="text-decoration-underline p hover-content">View Details</a></div>' +
+                        '</div></div></div>';
+                });
+            }
+            document.querySelectorAll('#nav-desc .row.row-gap-4, #nav-review .row.row-gap-4').forEach(function(el) { el.innerHTML = html; });
+
+            // Pagination controls
+            var totalPages2 = Math.max(1, Math.ceil(lastFilteredCars.length / ITEMS_PER));
+            var pgHtml = '';
+            if (currentPage > 1) pgHtml += '<li><a href="javascript:;" onclick="goPage(' + (currentPage-1) + ')"><i class="fa-solid fa-angle-left"></i></a></li>';
+            for (var p = 1; p <= totalPages2; p++) {
+                pgHtml += '<li class="' + (p===currentPage?'active':'') + '"><a href="javascript:;" onclick="goPage(' + p + ')">' + p + '</a></li>';
+            }
+            if (currentPage < totalPages2) pgHtml += '<li><a href="javascript:;" onclick="goPage(' + (currentPage+1) + ')"><i class="fa-solid fa-angle-right"></i></a></li>';
+            document.querySelectorAll('#border-pagination, .border-pagination').forEach(function(ul) { ul.innerHTML = pgHtml; });
+        }
+
+        function goPage(p) { currentPage = p; renderPage(); window.scrollTo({top: document.querySelector('.car-sec') ? document.querySelector('.car-sec').offsetTop - 80 : 0, behavior:'smooth'}); }
+
+        async function applyFilters() {
+            var search = (document.getElementById('car-search') || {value:''}).value.toLowerCase();
+            var category = (document.getElementById('filter-category') || {value:''}).value;
+            var fuel = (document.getElementById('filter-fuel') || {value:''}).value;
+            var condition = (document.getElementById('filter-condition') || {value:''}).value;
+            var sort = (document.getElementById('filter-sort') || {value:'default'}).value;
+
+            var cars = allCars.filter(function(c) {
+                if (c.status === 'Draft') return false;
+                if (category && c.category !== category) return false;
+                if (fuel && c.fuel !== fuel) return false;
+                if (condition && c.condition !== condition) return false;
+                if (search && !(c.name||'').toLowerCase().includes(search) && !(c.brand||'').toLowerCase().includes(search)) return false;
+                return true;
+            });
+
+            if (sort === 'price-low') cars.sort(function(a,b){ return a.price - b.price; });
+            else if (sort === 'price-high') cars.sort(function(a,b){ return b.price - a.price; });
+            else if (sort === 'newest') cars.sort(function(a,b){ return new Date(b.created_at) - new Date(a.created_at); });
+
+            renderCars(cars);
+        }
+
+        ['car-search','filter-category','filter-fuel','filter-condition','filter-sort'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.addEventListener('change', applyFilters);
+            if (el && el.tagName === 'INPUT') el.addEventListener('keyup', applyFilters);
+
         });
     } catch(e) {
         console.error('Failed to load categories:', e);
@@ -1262,6 +1424,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const option = new Option(fuel, fuel);
         fuelSelect.appendChild(option);
     });
+
 
     const conditionSelect = document.getElementById('filter-condition');
     conditionSelect.innerHTML = '<option value="">New & Used</option>';
@@ -1288,3 +1451,64 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <div class="blog-img position-relative">${badge}${sold}
                                 <div id="cars-container" class="row row-gap-4 mb-48"></div>
                                 <nav id="cars-pagination" class="d-flex justify-content-center mt-4"></nav>
+
+
+        // ── Browse by Category: load and render clickable category cards ─────
+        async function loadCategoryGrid() {
+            var grid = document.getElementById('categories-grid');
+            if (!grid) return;
+            var DEFAULTS = ['Sedan','SUV','Coupe','Sports','Electric','Luxury','Truck','Hatchback','Convertible','Hybrid'];
+            var icons = { 'Sedan':'fa-car','SUV':'fa-truck-monster','Coupe':'fa-car-side','Sports':'fa-flag-checkered',
+                'Electric':'fa-bolt','Luxury':'fa-gem','Truck':'fa-truck','Hatchback':'fa-car-rear',
+                'Convertible':'fa-wind','Hybrid':'fa-leaf','Wagon':'fa-car','Van':'fa-van-shuttle' };
+
+            // Use timeout race so UI never hangs
+            var timeout = new Promise(function(r){ setTimeout(function(){ r([]); }, 2500); });
+            var cats = [];
+            try { cats = await Promise.race([CategoryStore.getAll(), timeout]); } catch(e) { cats = []; }
+            if (!cats || !cats.length) {
+                cats = DEFAULTS.map(function(n,idx){ return {id:idx+1,name:n,status:'Published'}; });
+            }
+
+            var cars = (typeof allCars !== 'undefined' && allCars.length) ? allCars : [];
+            grid.innerHTML = cats.filter(function(c){ return c.status !== 'Draft'; }).map(function(c) {
+                var count = cars.filter(function(car){ return car.category===c.name && car.status!=='Draft'; }).length;
+                var icon = icons[c.name] || 'fa-car';
+                return '<div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">' +
+                    '<button onclick="filterByCategory(\'' + c.name.replace(/'/g,"\\'") + '\')" class="w-100 border-0 bg-transparent" style="cursor:pointer;">' +
+                    '<div class="category-card" style="background:#f8f9fa;border-radius:14px;padding:24px 12px;text-align:center;transition:all 0.25s;border:2px solid transparent;">' +
+                    '<div style="width:56px;height:56px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">' +
+                    '<i class="fa-solid ' + icon + '" style="font-size:22px;color:#f5a623;"></i></div>' +
+                    '<p style="font-weight:700;font-size:14px;color:#1a1a2e;margin-bottom:4px;">' + c.name + '</p>' +
+                    '<p style="font-size:12px;color:#6b7280;margin:0;">' + count + ' car' + (count!==1?'s':'') + '</p>' +
+                    '</div></button></div>';
+            }).join('') +
+            '<div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">' +
+            '<button onclick="filterByCategory(\'\')" class="w-100 border-0 bg-transparent" style="cursor:pointer;">' +
+            '<div style="background:#1a1a2e;border-radius:14px;padding:24px 12px;text-align:center;">' +
+            '<div style="width:56px;height:56px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">' +
+            '<i class="fa-solid fa-border-all" style="font-size:22px;color:#f5a623;"></i></div>' +
+            '<p style="font-weight:700;font-size:14px;color:#fff;margin-bottom:4px;">All Cars</p>' +
+            '<p style="font-size:12px;color:rgba(255,255,255,0.6);margin:0;">' + cars.filter(function(c){return c.status!=='Draft';}).length + ' total</p>' +
+            '</div></button></div>';
+        }
+
+        function filterByCategory(cat) {
+            // Update the filter dropdown
+            var sel = document.getElementById('filter-category');
+            if (sel) { sel.value = cat; }
+            // Highlight active category card
+            document.querySelectorAll('.category-card').forEach(function(el) {
+                el.style.background = '#f8f9fa';
+                el.style.border = '2px solid transparent';
+            });
+            // Scroll to car listings
+            var listing = document.getElementById('car-listing-section') || document.querySelector('.car-sec');
+            if (listing) listing.scrollIntoView({ behavior:'smooth', block:'start' });
+            applyFilters();
+        }
+</script>
+</body>
+
+</html>
+
