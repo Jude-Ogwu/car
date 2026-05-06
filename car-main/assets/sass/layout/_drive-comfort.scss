@@ -1,0 +1,134 @@
+.drive-comfort-sec {
+    background-color: $light-white;
+
+    .slick-list {
+        margin: 0 12px;
+    }
+
+    .cars-block-bg {
+        background-color: $light-white-2;
+        padding: clamp(30px, 5.99vw, 148px) 0 clamp(30px, 2.396vw, 55px); // 115px 46px
+
+        .car-block-1 {
+            position: relative;
+            width: 100%;
+
+            .car-name {
+                color: #D9D9D9;
+                font-size: clamp(80px, 13.017vw, 260px);
+                font-style: normal;
+                font-weight: 700;
+                line-height: 120%;
+                /* 299.914px */
+                letter-spacing: -7.498px;
+                position: absolute;
+                z-index: 2;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+                width: 100%;
+            }
+
+            .img-block {
+                text-align: center;
+                position: relative;
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                    padding-top: 74px;
+                }
+            }
+
+            .car-link {
+                margin-top: -10%;
+                position: relative;
+                z-index: 2;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                background-color: rgba(250, 182, 55, 0.90);
+                width: clamp(100px, 8.333vw, 220px);
+                height: clamp(100px, 8.333vw, 220px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: $transition;
+
+                &:hover {
+                    background-color: $white;
+                    border: 1px solid $accent-1;
+
+                    .link-text {
+                        transition: $transition;
+                        color: $accent-1;
+                    }
+
+                }
+            }
+
+            .block-content {
+                display: flex;
+                align-items: end;
+                justify-content: space-between;
+                padding-top: clamp(52px, 4.583vw, 128px);
+                flex-wrap: wrap;
+                row-gap: 8px;
+                @include media-query(560px) {
+                        padding-top: 0px;
+                  }
+                .button-1 {
+                    padding: clamp(12px, 0.833vw, 32px) clamp(18px, 1.354vw, 48px);
+                    background-color: $accent-1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 5000px;
+                    transition: $transition;
+
+                    &:hover {
+                        transition: $transition;
+                        border: 1px solid $accent-1;
+                        background-color: transparent;
+
+                        svg {
+                            path {
+                                stroke: $accent-1;
+                                transition: $transition;
+                            }
+                        }
+                    }
+                }
+
+                .button-2 {
+                    padding: clamp(12px, 0.833vw, 32px) clamp(18px, 1.354vw, 48px);
+                    border: 1px solid $accent-1;
+                    background-color: transparent;
+                    display: flex;
+                    align-items: center;
+                    justify-self: center;
+                    border-radius: 5000px;
+                    transition: $transition;
+
+                    &:hover {
+                        transition: $transition;
+                        border: 1px solid $accent-1;
+                        background-color: $accent-1;
+
+                        svg {
+                            path {
+                                transition: $transition;
+                                stroke: $white;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

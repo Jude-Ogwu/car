@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard — Vehicle Dealers Hub Admin</title>
+    <link rel="shortcut icon" href="../assets/media/favicon.png">
+    <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <img src="../assets/media/favicon.png" alt="Vehicle Dealers Hub" class="sidebar-logo">
+        <span class="sidebar-label">Admin</span>
+        <button class="sidebar-close-btn" id="sidebar-close" title="Close menu"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+        <a href="cars.html" class="nav-item"><i class="fa-solid fa-car"></i><span>Manage Cars</span></a>
+        <a href="orders.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders &amp; Inquiries</span></a>
+        <hr class="sidebar-divider">
+        <a href="../index.html" class="nav-item" target="_blank"><i class="fa-solid fa-globe"></i><span>View Website</span></a>
+        <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+</div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="admin-main">
+    <header class="admin-topbar">
+        <button class="sidebar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="topbar-title"><h5>Dashboard</h5></div><div class="ms-auto me-3"><button class="btn btn-outline-secondary btn-sm" onclick="location.reload()"><i class="fa-solid fa-rotate-right me-1"></i>Refresh</button></div>
+        <div class="topbar-right">
+            <span class="badge bg-success me-2"><i class="fa-solid fa-circle me-1" style="font-size:8px;"></i>Live</span>
+            <span class="admin-user"><i class="fa-solid fa-user-shield me-1"></i>Admin</span>
+        </div>
+    </header>
+
+    <div class="admin-content">
+        <div class="row g-4 mb-4">
+            <div class="col-lg-3 col-sm-6">
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon"><i class="fa-solid fa-car"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-total-cars">–</div>
+                        <div class="stat-label">Total Cars</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="stat-card stat-green">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-available">–</div>
+                        <div class="stat-label">Available</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="stat-card stat-orange">
+                    <div class="stat-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-new-orders">–</div>
+                        <div class="stat-label">New Inquiries</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="stat-card stat-gold">
+                    <div class="stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-revenue">–</div>
+                        <div class="stat-label">Closed Revenue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h6><i class="fa-solid fa-bell me-2"></i>Recent Inquiries</h6>
+                        <a href="orders.html" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table admin-table mb-0">
+                            <thead><tr><th>Customer</th><th>Car</th><th>Price</th><th>Status</th><th>Date</th></tr></thead>
+                            <tbody id="recent-orders-tbody">
+                                <tr><td colspan="5" class="text-center text-muted py-4">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h6><i class="fa-solid fa-chart-pie me-2"></i>Inventory Status</h6>
+                    </div>
+                    <div class="p-3">
+                        <div class="inventory-item"><span>Available</span><span class="badge bg-success" id="inv-available">–</span></div>
+                        <div class="inventory-item"><span>Sold</span><span class="badge bg-danger" id="inv-sold">–</span></div>
+                        <div class="inventory-item"><span>Total Cars</span><span class="badge bg-primary" id="inv-total">–</span></div>
+                        <div class="inventory-item"><span>Avg Price</span><span class="text-muted" id="inv-avg">–</span></div>
+                        <hr>
+                        <a href="cars.html" class="btn btn-primary w-100 mt-2"><i class="fa-solid fa-plus me-2"></i>Add New Car</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/js/vendor/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/data.js"></script>
+<script>
+    AdminAuth.requireAuth();
+
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); }
+    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+
+    document.getElementById('sidebar-toggle').addEventListener('click', function() {
+        if (window.innerWidth <= 768) { openSidebar(); }
+        else { sidebar.classList.toggle('collapsed'); }
+    });
+    document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
+    });
+
+    (async function() {
+        try {
+            var carStats = await CarStore.getStats();
+            var orderStats = await OrderStore.getStats();
+
+            document.getElementById('stat-total-cars').textContent = carStats.total;
+            document.getElementById('stat-available').textContent = carStats.available;
+            document.getElementById('stat-new-orders').textContent = orderStats.newOrders;
+            document.getElementById('stat-revenue').textContent = '$' + orderStats.revenue.toLocaleString();
+            document.getElementById('inv-available').textContent = carStats.available;
+            document.getElementById('inv-sold').textContent = carStats.sold;
+            document.getElementById('inv-total').textContent = carStats.total;
+            document.getElementById('inv-avg').textContent = '$' + carStats.avgPrice.toLocaleString();
+
+            var orders = (await OrderStore.getAll()).slice(0, 5);
+            var statusColors = { 'New': 'warning', 'In Progress': 'info', 'Closed': 'success' };
+            var tbody = document.getElementById('recent-orders-tbody');
+            if (!orders.length) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No inquiries yet.</td></tr>';
+            } else {
+                tbody.innerHTML = orders.map(function(o) {
+                    var d = new Date(o.date_submitted || o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    return '<tr>' +
+                        '<td><strong>' + (o.customer_name || '–') + '</strong><br><small class="text-muted">' + (o.email || '') + '</small></td>' +
+                        '<td>' + (o.car_name || '–') + '</td>' +
+                        '<td>$' + (o.total_price || 0).toLocaleString() + '</td>' +
+                        '<td><span class="badge bg-' + (statusColors[o.status] || 'secondary') + '">' + o.status + '</span></td>' +
+                        '<td>' + d + '</td></tr>';
+                }).join('');
+            }
+        } catch (err) {
+            console.error('Dashboard load error:', err);
+            document.getElementById('recent-orders-tbody').innerHTML =
+                '<tr><td colspan="5" class="text-center text-danger py-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>Could not load data. Check console.</td></tr>';
+        }
+    })();
+</script>
+</body>
+</html>

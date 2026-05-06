@@ -1,0 +1,86 @@
+.porfolio-sec {
+    .car-bg {
+        background: url('../media/about/car.jpg');
+        background-size: cover;
+        border-radius: $br-16;
+        padding: clamp(70px, 8.125vw, 228px) 0;
+
+        .porfolio-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: $gap-48;
+
+            .content-hr-line {
+                width: 1px;
+                height: clamp(70px, 4.219vw, 128px);
+                background-color: $white;
+            }
+            .content-hr-line-1{
+                width: 1px;
+                height: clamp(70px, 4.219vw, 128px);
+                background-color: $white;
+            }
+            .content-hr-line-1{
+                width: 1px;
+                height: clamp(70px, 4.219vw, 128px);
+                background-color: $white;
+                @include media-query(575px) {
+                    display: none;
+                }
+            }
+            .porfolio-content-1 {
+                color: $white;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                
+            }
+        }
+    }
+}
+
+.our-renting-sec {
+    .block-1 {
+        background-color: $white;
+        display: flex;
+        padding: clamp(39px, 3.854vw, 128px) clamp(39px, 3.75vw, 128px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
+        border-radius: $br-12;
+        box-shadow: 0px 39px 11px 0px rgba(0, 0, 0, 0.00), 0px 25px 10px 0px rgba(0, 0, 0, 0.01), 0px 14px 8px 0px rgba(0, 0, 0, 0.05), 0px 6px 6px 0px rgba(0, 0, 0, 0.09), 0px 2px 3px 0px rgba(0, 0, 0, 0.10);
+        transition: $transition;
+
+        .car-name {
+            transition: $transition;
+        }
+
+        svg {
+            path {
+                transition: $transition;
+            }
+        }
+
+        &:hover {
+            transition: $transition;
+            background-color: $black;
+
+            svg {
+                path {
+                    transition: $transition;
+                    fill: $white;
+                }
+            }
+
+            .car-name {
+                transition: $transition;
+                color: $white;
+            }
+        }
+
+    }
+}

@@ -1,0 +1,18 @@
+.fleet-sec {
+    .our-fleet {
+        position: relative;
+        .fleet-img {
+
+            img {
+                border-radius: $br-12;
+            }
+        }
+
+        .fleet-logo-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}

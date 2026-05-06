@@ -1,0 +1,17 @@
+.error-sec {
+    .error-img {}
+
+    .lost-text {
+        font-size: clamp(24px, 2.292vw, 54px);
+    }
+
+    .page-not {
+        font-size: clamp(20px, 1.563vw, 64px);
+
+        @include media-query(1499px) {
+            br {
+                display: none;
+            }
+        }
+    }
+}

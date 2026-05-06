@@ -1,0 +1,96 @@
+.sidebar {
+    background-color: $white;
+
+    .search-form {
+        width: 100%;
+        border-radius: $br-8;
+        border: 1px solid $dark-gray;
+        background-color: transparent;
+        padding: clamp(18px, 1.25vw, 48px);
+
+        &:focus {
+            border: 1px solid $accent-1;
+            outline: none;
+        }
+    }
+
+    .categories-block {
+        padding: clamp(18px, 1.25vw, 48px);
+        border-radius: $br-12;
+        background-color: $lightest-gray;
+
+        .categories-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: $transition;
+        }
+    }
+
+    .insta-block {
+        padding: 0 clamp(18px, 1.25vw, 48px);
+
+        .insta-content {
+            display: flex;
+            align-items: center;
+            gap: $gap-12;
+        }
+    }
+
+    .tags-blocks {
+        padding: 0 clamp(18px, 1.25vw, 48px);
+
+        .tags-block {
+            display: flex;
+            align-items: center;
+            gap: $gap-12;
+            flex-wrap: wrap;
+
+            .tags-content {
+                border: 1px solid $dark-gray;
+                border-radius: 48px;
+                background-color: transparent;
+                padding: clamp(4px, 0.417vw, 16px) clamp(18px, 1.25vw, 48px);
+                row-gap: 12px;
+
+                transition: $transition;
+
+                &:hover {
+                    transition: $transition;
+                    background-color: $black;
+
+                    p {
+                        transition: $transition;
+                        color: $accent-1;
+                    }
+                }
+            }
+        }
+    }
+
+    .get-intouch {
+        padding: 0 clamp(18px, 1.25vw, 48px);
+
+        .get-intouch-icon {
+            width: clamp(28px, 1.875vw, 76px);
+            height: clamp(28px, 1.875vw, 76px);
+            border: 1px solid $dark-gray;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: clamp(16px, 1.042vw, 40px);
+                height: clamp(16px, 1.042vw, 40px);
+            }
+        }
+    }
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+}

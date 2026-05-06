@@ -1,0 +1,31 @@
+.title-banner {
+    width: 100%;
+    background: url('../media/backgrounds/bg-1.jpg') no-repeat;
+    background-position: center;
+    padding: clamp(130px, 9.74vw, 264px) clamp(70px, 11.51vw, 350px);
+    // padding: 187px 0 221px 0;
+    position: relative;
+
+    .title-content {
+        color: $lightest-gray;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        font-size: clamp(40px,2.865vw,55px);
+    }
+}
+
+.title-banner-2 {
+    background: url('../media/backgrounds/bg-2.jpg') no-repeat;
+
+}
+
+.title-banner-3 {
+    background: url('../media/backgrounds/bg-3.jpg') no-repeat;
+}
+
+.title-banner-4 {
+    background: url('../media/backgrounds/bg-4.jpg') no-repeat;
+}
