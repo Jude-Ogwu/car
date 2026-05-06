@@ -12,13 +12,15 @@ const SUPABASE_ANON_KEY = 'sb_publishable_a2BPr-FHkue1wQx46vnCwA__vU_oeqM';
 let _supabaseClient = null;
 function getSupabase() {
   if (_supabaseClient) return _supabaseClient;
-  if (window.supabase && window.supabase.createClient) {
+  // Supabase CDN exposes a global `supabase` object.
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
     _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     return _supabaseClient;
   }
   console.error('Supabase SDK not loaded yet. Ensure the CDN <script> comes before data.js.');
   return null;
 }
+
 
 // ─── ADMIN AUTH ───────────────────────────────────────────────────────────────
 const AdminAuth = {

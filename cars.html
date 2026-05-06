@@ -73,7 +73,7 @@
                                     <a href="javascript:void(0); " class="active">Catalogue</a>
                                     <ul>
                                         <li> <a href="cars.html">Cars</a></li>
-                                        <li> <a href="car-details.html">Cars Details</a></li>
+                                        
                                     </ul>
                                 </li>
 
@@ -1251,6 +1251,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Populate dynamic filters from data
     const fuelSelect = document.getElementById('filter-fuel');
     fuelSelect.innerHTML = '<option value="">Any Fuel</option>';
+
+    // Render initial car list (so page works even if existing markup is static)
+    try {
+        renderCars(allCars, '#cars-container');
+    } catch (e) {
+        // ignore here; renderCars may be defined later in file if HTML was duplicated
+    }
     [...new Set(allCars.map(c => c.fuel).filter(Boolean))].sort().forEach(fuel => {
         const option = new Option(fuel, fuel);
         fuelSelect.appendChild(option);
