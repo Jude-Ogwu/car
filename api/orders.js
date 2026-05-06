@@ -1,5 +1,5 @@
 /**
- * CarVoyage — API: Orders / Inquiries
+ * Vehicle Dealers Hub — API: Orders / Inquiries
  * ─────────────────────────────────────────────────────────────
  * Use this to submit a customer inquiry from any frontend page.
  *

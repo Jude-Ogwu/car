@@ -1,5 +1,5 @@
 /**
- * CarVoyage — API: Cars
+ * Vehicle Dealers Hub — API: Cars
  * ─────────────────────────────────────────────────────────────
  * Simple data-access module for car inventory.
  * Your colleague can include this file and use the functions below.
@@ -50,7 +50,7 @@ const CarsAPI = (function() {
       return data[0] || null;
     },
 
-    /** Get only available cars (for public listing) */
+    /** Get only available cars (for public Catalogue) */
     async getAvailable() {
       return this.getAll({ status: 'Available' });
     },

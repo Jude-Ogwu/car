@@ -1,5 +1,5 @@
 /**
- * CarVoyage — API: Categories
+ * Vehicle Dealers Hub — API: Categories
  * ─────────────────────────────────────────────────────────────
  * Simple data-access module for car categories.
  *

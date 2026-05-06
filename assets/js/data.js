@@ -1,5 +1,5 @@
 /**
- * CarVoyage — Data Layer
+ * Vehicle Dealers Hub — Data Layer
  * Central data access layer for Cars, Orders, and Categories via Supabase.
  * All CRUD operations live here. Import data.js before using any Store.
  */
@@ -22,7 +22,7 @@ function getSupabase() {
 
 // ─── ADMIN AUTH ───────────────────────────────────────────────────────────────
 const AdminAuth = {
-  CREDENTIALS: { username: 'admin', password: 'carvoyage2024' },
+  CREDENTIALS: { username: 'admin', password: 'Vehicle Dealers Hub2024' },
   login(username, password) {
     if (username === this.CREDENTIALS.username && password === this.CREDENTIALS.password) {
       sessionStorage.setItem('cv_admin', 'true');

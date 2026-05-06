@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════
--- CarVoyage — Supabase Database Schema
+-- Vehicle Dealers Hub — Supabase Database Schema
 -- Run this entire file in your Supabase SQL Editor once.
 -- ═══════════════════════════════════════════════════════════
 

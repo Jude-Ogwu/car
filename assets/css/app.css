@@ -634,7 +634,184 @@ Helpers
     gap: clamp(3px, 0.313vw, 7px);
 }
 
-/*----------------------------------------*/
+/* Hero Slider Styles */
+.hero-slider-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.hero-slider {
+    position: relative;
+    width: 100%;
+}
+
+.hero-slide {
+    display: none;
+    animation: fadeIn 0.8s ease-in-out;
+    width: 100%;
+}
+
+.hero-slide.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Slider Navigation Arrows */
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.slider-arrow:hover {
+    background: #FAB637;
+    border-color: #FAB637;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-arrow:hover svg {
+    stroke: #fff;
+}
+
+.slider-arrow svg {
+    width: 24px;
+    height: 24px;
+    stroke: #0C0C0D;
+    transition: stroke 0.3s ease;
+}
+
+.slider-arrow-prev {
+    left: 15px;
+}
+
+.slider-arrow-next {
+    right: 15px;
+}
+
+/* Slider Dots */
+.slider-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.dot.active {
+    background: #FAB637;
+    transform: scale(1.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .slider-arrow {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .slider-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .slider-arrow-prev {
+        left: 10px;
+    }
+    
+    .slider-arrow-next {
+        right: 10px;
+    }
+    
+    .hero-image img {
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 767px) {
+    .slider-arrow {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .slider-arrow svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .slider-dots {
+        bottom: 20px;
+        gap: 8px;
+    }
+    
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .hero-content {
+        padding-right: 50px;
+    }
+}
+
+/* Ensure content has proper spacing */
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
 
 /*  SPACE CSS START
 /*----------------------------------------*/
