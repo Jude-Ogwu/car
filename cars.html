@@ -1506,21 +1506,26 @@
         async function loadCategoryGrid() {
             var grid = document.getElementById('categories-grid');
             if (!grid) return;
-            var cats = [];
-            try { cats = await CategoryStore.getAll(); } catch(e) {}
-            if (!cats || !cats.length) {
-                var DEFAULTS = ['Sedan','SUV','Coupe','Sports','Electric','Luxury','Truck','Hatchback','Convertible','Hybrid'];
-                cats = DEFAULTS.map(function(n,i){ return {id:i+1,name:n}; });
-            }
-            var catIcons = { 'Sedan':'fa-car','SUV':'fa-truck-monster','Coupe':'fa-car-side','Sports':'fa-flag-checkered',
+            var DEFAULTS = ['Sedan','SUV','Coupe','Sports','Electric','Luxury','Truck','Hatchback','Convertible','Hybrid'];
+            var icons = { 'Sedan':'fa-car','SUV':'fa-truck-monster','Coupe':'fa-car-side','Sports':'fa-flag-checkered',
                 'Electric':'fa-bolt','Luxury':'fa-gem','Truck':'fa-truck','Hatchback':'fa-car-rear',
                 'Convertible':'fa-wind','Hybrid':'fa-leaf','Wagon':'fa-car','Van':'fa-van-shuttle' };
-            grid.innerHTML = cats.map(function(c) {
-                var count = (allCars||[]).filter(function(car){ return car.category===c.name && car.status!=='Draft'; }).length;
-                var icon = catIcons[c.name] || 'fa-car';
+
+            // Use timeout race so UI never hangs
+            var timeout = new Promise(function(r){ setTimeout(function(){ r([]); }, 2500); });
+            var cats = [];
+            try { cats = await Promise.race([CategoryStore.getAll(), timeout]); } catch(e) { cats = []; }
+            if (!cats || !cats.length) {
+                cats = DEFAULTS.map(function(n,idx){ return {id:idx+1,name:n,status:'Published'}; });
+            }
+
+            var cars = (typeof allCars !== 'undefined' && allCars.length) ? allCars : [];
+            grid.innerHTML = cats.filter(function(c){ return c.status !== 'Draft'; }).map(function(c) {
+                var count = cars.filter(function(car){ return car.category===c.name && car.status!=='Draft'; }).length;
+                var icon = icons[c.name] || 'fa-car';
                 return '<div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">' +
                     '<button onclick="filterByCategory(\'' + c.name.replace(/'/g,"\\'") + '\')" class="w-100 border-0 bg-transparent" style="cursor:pointer;">' +
-                    '<div class="category-card" id="cat-card-' + c.id + '" style="background:#f8f9fa;border-radius:14px;padding:24px 12px;text-align:center;transition:all 0.25s;border:2px solid transparent;">' +
+                    '<div class="category-card" style="background:#f8f9fa;border-radius:14px;padding:24px 12px;text-align:center;transition:all 0.25s;border:2px solid transparent;">' +
                     '<div style="width:56px;height:56px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">' +
                     '<i class="fa-solid ' + icon + '" style="font-size:22px;color:#f5a623;"></i></div>' +
                     '<p style="font-weight:700;font-size:14px;color:#1a1a2e;margin-bottom:4px;">' + c.name + '</p>' +
@@ -1529,11 +1534,11 @@
             }).join('') +
             '<div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">' +
             '<button onclick="filterByCategory(\'\')" class="w-100 border-0 bg-transparent" style="cursor:pointer;">' +
-            '<div style="background:#1a1a2e;border-radius:14px;padding:24px 12px;text-align:center;border:2px solid transparent;">' +
+            '<div style="background:#1a1a2e;border-radius:14px;padding:24px 12px;text-align:center;">' +
             '<div style="width:56px;height:56px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">' +
             '<i class="fa-solid fa-border-all" style="font-size:22px;color:#f5a623;"></i></div>' +
             '<p style="font-weight:700;font-size:14px;color:#fff;margin-bottom:4px;">All Cars</p>' +
-            '<p style="font-size:12px;color:rgba(255,255,255,0.6);margin:0;">' + (allCars||[]).filter(function(c){return c.status!=='Draft';}).length + ' total</p>' +
+            '<p style="font-size:12px;color:rgba(255,255,255,0.6);margin:0;">' + cars.filter(function(c){return c.status!=='Draft';}).length + ' total</p>' +
             '</div></button></div>';
         }
 

@@ -141,8 +141,18 @@
                                     <textarea id="cat-desc" class="form-control" rows="3" placeholder="Brief description of this category..."></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold" style="font-size:13px;">Thumbnail / Category Image URL</label>
-                                    <input type="text" id="cat-thumbnail" class="form-control" placeholder="https://... or assets/media/cars/img.jpg" oninput="previewCatImg(this.value)">
+                                    <label class="form-label fw-semibold" style="font-size:13px;">Category Image</label>
+                                    <ul class="nav nav-tabs mb-2" id="catImgTabs" style="font-size:13px;">
+                                        <li class="nav-item"><button type="button" class="nav-link active" id="tab-url-btn" onclick="switchCatTab('url')"><i class="fa-solid fa-link me-1"></i>Paste URL</button></li>
+                                        <li class="nav-item"><button type="button" class="nav-link" id="tab-upload-btn" onclick="switchCatTab('upload')"><i class="fa-solid fa-upload me-1"></i>Upload File</button></li>
+                                    </ul>
+                                    <div id="cat-img-tab-url">
+                                        <input type="text" id="cat-thumbnail" class="form-control" placeholder="https://... or assets/media/cars/img.jpg" oninput="previewCatImg(this.value)">
+                                    </div>
+                                    <div id="cat-img-tab-upload" class="d-none">
+                                        <input type="file" id="cat-thumbnail-file" class="form-control" accept="image/*" onchange="handleCatFileUpload(this)">
+                                        <small class="text-muted">JPG, PNG, WebP supported. Max 2MB.</small>
+                                    </div>
                                     <img id="cat-img-preview" class="modal-img-preview" alt="Preview">
                                 </div>
                             </div>
@@ -214,6 +224,30 @@
         new bootstrap.Toast(el, { delay: 4000 }).show();
     }
 
+    var catUploadedImage = null;
+
+    function switchCatTab(tab) {
+        document.getElementById('cat-img-tab-url').classList.toggle('d-none', tab !== 'url');
+        document.getElementById('cat-img-tab-upload').classList.toggle('d-none', tab !== 'upload');
+        document.getElementById('tab-url-btn').classList.toggle('active', tab === 'url');
+        document.getElementById('tab-upload-btn').classList.toggle('active', tab !== 'url');
+        if (tab === 'url') catUploadedImage = null;
+    }
+
+    function handleCatFileUpload(input) {
+        if (!input.files || !input.files[0]) return;
+        var file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) { alert('Image too large. Max 2MB.'); input.value = ''; return; }
+        var reader = new FileReader();
+        reader.onload = function(e) { catUploadedImage = e.target.result; previewCatImg(catUploadedImage); };
+        reader.readAsDataURL(file);
+    }
+
+    function getCatThumbnail() {
+        if (catUploadedImage) return catUploadedImage;
+        return document.getElementById('cat-thumbnail').value.trim() || '';
+    }
+
     function previewCatImg(url) {
         var img = document.getElementById('cat-img-preview');
         if (url) { img.src = url; img.classList.add('show'); }
@@ -222,12 +256,14 @@
 
     function clearForm() {
         editingId = null;
+        catUploadedImage = null;
         document.getElementById('cat-form').reset();
         document.getElementById('cat-id').value = '';
         document.getElementById('cat-img-preview').classList.remove('show');
         document.getElementById('modal-title').textContent = 'New Category';
         document.getElementById('cats-cars-list').innerHTML = '<div class="col-12 text-center text-muted py-3"><small>Save the category first, then view its products here.</small></div>';
         document.getElementById('cat-save-btn').innerHTML = '<i class="fa-solid fa-globe me-1"></i>Save &amp; Publish';
+        switchCatTab('url');
     }
 
     async function loadCarsForCategory(categoryName) {
@@ -284,7 +320,7 @@
         var name = document.getElementById('cat-name').value.trim();
         if (!name) { showToast('Category name is required.', 'danger'); return; }
         var desc   = document.getElementById('cat-desc').value.trim();
-        var thumb  = document.getElementById('cat-thumbnail').value.trim();
+        var thumb  = getCatThumbnail();
         var status = forcedStatus || document.getElementById('cat-status').value || 'Published';
 
         var saveBtn = document.getElementById('cat-save-btn');
