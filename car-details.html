@@ -175,12 +175,12 @@
                 </div>
                 <div class="vehicle-content mb-48">
                     <div>
-                        <h3 class="fw-700 mb-8">Ferrari Purosangue</h3>
+                        <h3 id="car-detail-name" class="fw-700 mb-8">Ferrari Purosangue</h3>
                         <p>3.5 D5 PowerPulse Momentum 5dr AWD Geartronic Estate</p>
                     </div>
                     <div class="d-flex align-items-center gap-24">
                         <a href="booking.html?id=" class="cus-btn-3 buy-now-btn">Buy Now</a>
-                        <h4>$80/day </h4>
+                        <h4 id="car-detail-price">$80/day </h4>
                     </div>
                 </div>
                 <div>
@@ -205,7 +205,7 @@
                             </div>
                             <div>
                                 <p class="fw-600 black">Transmission</p>
-                                <p class="dark-gray">Auto</p>
+                                <p id="spec-transmission" class="dark-gray">Auto</p>
                             </div>
                         </div>
                         <div class="content-1">
@@ -225,7 +225,7 @@
                             </div>
                             <div>
                                 <p class="fw-600 black">Body</p>
-                                <p class="dark-gray">1500 kg</p>
+                                <p id="spec-body" class="dark-gray">1500 kg</p>
                             </div>
                         </div>
                         <div class="content-1">
@@ -252,7 +252,7 @@
                             </div>
                             <div>
                                 <p class="fw-600 black">Manufacturing Year</p>
-                                <p class="dark-gray">2022</p>
+                                <p id="spec-year" class="dark-gray">2022</p>
                             </div>
                         </div>
                         <div class="content-1">
@@ -284,7 +284,7 @@
                             </div>
                             <div>
                                 <p class="fw-600 black">Fuel Mileage</p>
-                                <p class="dark-gray">13 Km/Lt</p>
+                                <p id="spec-mileage" class="dark-gray">13 Km/Lt</p>
                             </div>
                         </div>
                         <div class="content-1">
@@ -308,7 +308,7 @@
                             </div>
                             <div>
                                 <p class="fw-600 black">Fuel Type</p>
-                                <p class="dark-gray">Petrol</p>
+                                <p id="spec-fuel" class="dark-gray">Petrol</p>
                             </div>
                         </div>
                         <div class="content-1">
@@ -332,7 +332,7 @@
                             </div>
                             <div>
                                 <p class="fw-600 black">Tires</p>
-                                <p class="dark-gray">All Purpose Tyres</p>
+                                <p id="spec-tires" class="dark-gray">All Purpose Tyres</p>
                             </div>
                         </div>
                     </div>
@@ -341,7 +341,7 @@
                             <div class="mb-48">
                                 <h4 class="mb-24">Car Description</h4>
                                 <div class="hr-line mb-24"></div>
-                                <p class="">Arcu sit aenean ridiculus ac fermentum nullam fermentum. Eu aliquam amet
+                                <p id="car-detail-desc" class="">Arcu sit aenean ridiculus ac fermentum nullam fermentum. Eu aliquam amet
                                     elementum nec consequat parturient leo amet. Ultrices risus amet felis nunc orci sit
                                     consequat auctor enim. Mi dictumst molestie nibh pretium amet et. Sociis amet enim
                                     nam amet faucibus pellentesque at sit. Id tincidunt nunc viverra parturient viverra.
@@ -355,8 +355,7 @@
                             <div class="mb-48">
                                 <h4 class="mb-24">Car Special Features</h4>
                                 <div class="hr-line mb-24"></div>
-                                <div class="row align-items-center row-gap-4">
-                                    <div class="col-lg-4 col-6">
+                                <div id="car-features-row" class="row align-items-center row-gap-4"><div class="col-lg-4 col-6">
                                         <div class="car-features mb-12">
                                             <div>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25"
@@ -837,39 +836,54 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             var params = new URLSearchParams(window.location.search);
-            var carId = parseInt(params.get('id'));
+            var carId   = parseInt(params.get('id'));
             if (!carId) { document.title = 'Car Not Found - CarVoyage'; return; }
 
             var car = await CarStore.getById(carId);
             if (!car) {
-                var h = document.querySelector('h2, h3, h4');
+                var h = document.getElementById('car-detail-name');
                 if (h) h.textContent = 'Car Not Found';
                 return;
             }
 
+            // ── Page title ──────────────────────────────────────────────────
             document.title = car.name + ' - CarVoyage';
-                loadRelatedCars(car);
 
-            document.querySelectorAll('.color-primary.fw-600, h2.color-primary, .car-sale-price, .price-tag').forEach(function(el) {
-                if (el.textContent.match(/\$|\/Hr|Price/i)) el.textContent = '$' + car.price.toLocaleString();
-            });
+            // ── Car name ────────────────────────────────────────────────────
+            var nameEl = document.getElementById('car-detail-name');
+            if (nameEl) nameEl.textContent = car.name;
 
-            var buyBtn = document.querySelector('.buy-now-btn, a[href*="booking"]');
-            if (buyBtn) buyBtn.href = 'booking.html?id=' + car.id;
+            // ── Price ───────────────────────────────────────────────────────
+            var priceEl = document.getElementById('car-detail-price');
+            if (priceEl) priceEl.textContent = '$' + (car.price || 0).toLocaleString();
 
-            document.querySelectorAll('.car-detail-name, h2.black, h3.black, h2.fw-700, h3.fw-700').forEach(function(el, i) {
-                if (i === 0) el.textContent = car.name;
-            });
+            // ── Spec fields ─────────────────────────────────────────────────
+            function setSpec(id, value) {
+                var el = document.getElementById(id);
+                if (el && value !== undefined && value !== null) el.textContent = value;
+            }
+            setSpec('spec-transmission', car.transmission || 'N/A');
+            setSpec('spec-body',         car.category     || 'N/A');
+            setSpec('spec-year',         car.year         || 'N/A');
+            setSpec('spec-mileage',      (car.mileage || 0).toLocaleString() + ' km');
+            setSpec('spec-fuel',         car.fuel         || 'N/A');
+            setSpec('spec-tires',        car.condition    || 'N/A');
 
-            var specMap = {
-                '.spec-year': car.year, '.spec-brand': car.brand, '.spec-category': car.category,
-                '.spec-mileage': (car.mileage || 0).toLocaleString() + ' km', '.spec-fuel': car.fuel,
-                '.spec-transmission': car.transmission, '.spec-engine': car.engine || 'N/A',
-                '.spec-hp': (car.horsepower || 0) + ' hp', '.spec-color': car.color || 'N/A',
-                '.spec-seats': (car.seats || 5) + ' seats', '.spec-condition': car.condition || 'New'
-            };
-            Object.keys(specMap).forEach(function(sel) { var el = document.querySelector(sel); if (el) el.textContent = specMap[sel]; });
+            // ── Description ─────────────────────────────────────────────────
+            var descEl = document.getElementById('car-detail-desc');
+            if (descEl && car.description) descEl.textContent = car.description;
 
+            // ── Features ─────────────────────────────────────────────────────
+            var featRow = document.getElementById('car-features-row');
+            if (featRow && Array.isArray(car.features) && car.features.length) {
+                featRow.innerHTML = car.features.map(function(f) {
+                    return '<div class="col-lg-4 col-6"><div class="car-features mb-12">' +
+                           '<i class="fa-solid fa-circle-check" style="color:#f5a623;margin-right:8px;"></i>' +
+                           '<span class="fw-600 black">' + f + '</span></div></div>';
+                }).join('');
+            }
+
+            // ── Images ───────────────────────────────────────────────────────
             var images = [];
             if (Array.isArray(car.images) && car.images.length) images = car.images;
             else if (typeof car.images === 'string') { try { images = JSON.parse(car.images); } catch(e) {} }
@@ -879,31 +893,13 @@
                 if (images[i]) img.src = images[i]; else if (images[0]) img.src = images[0];
             });
 
-            var form = document.getElementById('inquiry-form') || document.querySelector('.contact-form, form');
-            if (form) {
-                form.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    var order = {
-                        carId: car.id, carName: car.name, totalPrice: car.price,
-                        customerName: (form.querySelector('[name="name"], #name') || {value:''}).value,
-                        email: (form.querySelector('[name="email"], #email') || {value:''}).value,
-                        phone: (form.querySelector('[name="phone"], #phone') || {value:''}).value,
-                        message: (form.querySelector('[name="message"], textarea') || {value:''}).value,
-                        status: 'New', dateSubmitted: new Date().toISOString()
-                    };
-                    var btn = form.querySelector('[type="submit"]');
-                    if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
-                    await OrderStore.submit(order);
-                    form.reset();
-                    if (btn) { btn.disabled = false; btn.textContent = 'Send Inquiry'; }
-                    var msg = document.getElementById('inquiry-success') || document.createElement('div');
-                    msg.id = 'inquiry-success';
-                    msg.className = 'alert alert-success mt-3';
-                    msg.textContent = "Your inquiry has been submitted! We'll contact you shortly.";
-                    form.after(msg);
-                    setTimeout(function() { if (msg.parentNode) msg.remove(); }, 6000);
-                });
-            }
+            // ── Buy Now button ───────────────────────────────────────────────
+            document.querySelectorAll('.buy-now-btn, a[href*="booking"]').forEach(function(btn) {
+                if (!btn.classList.contains('nav-btn')) btn.href = 'booking.html?id=' + car.id;
+            });
+
+            // ── Inquiry form ─────────────────────────────────────────────────
+            loadRelatedCars(car);
         });
 
         // ── You May Also Like: dynamically load related cars ─────────────────

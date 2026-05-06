@@ -86,8 +86,8 @@
                     </div>
                     <div class="main-menu__right">
                         <div class="search-heart-icon d-sm-flex d-none align-items-center gap-24">
-                            <a class="cus-btn" href="cars.html">
-                                <span class="text">Book Now</span>
+                            <a class="cus-btn" href="request-car.html">
+                                <span class="text">Request a Car</span>
                                 <span class="">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                         fill="none">
@@ -1447,7 +1447,19 @@
                 });
             }
             document.querySelectorAll('#nav-desc .row.row-gap-4, #nav-review .row.row-gap-4').forEach(function(el) { el.innerHTML = html; });
+
+            // Pagination controls
+            var totalPages2 = Math.max(1, Math.ceil(lastFilteredCars.length / ITEMS_PER));
+            var pgHtml = '';
+            if (currentPage > 1) pgHtml += '<li><a href="javascript:;" onclick="goPage(' + (currentPage-1) + ')"><i class="fa-solid fa-angle-left"></i></a></li>';
+            for (var p = 1; p <= totalPages2; p++) {
+                pgHtml += '<li class="' + (p===currentPage?'active':'') + '"><a href="javascript:;" onclick="goPage(' + p + ')">' + p + '</a></li>';
+            }
+            if (currentPage < totalPages2) pgHtml += '<li><a href="javascript:;" onclick="goPage(' + (currentPage+1) + ')"><i class="fa-solid fa-angle-right"></i></a></li>';
+            document.querySelectorAll('#border-pagination, .border-pagination').forEach(function(ul) { ul.innerHTML = pgHtml; });
         }
+
+        function goPage(p) { currentPage = p; renderPage(); window.scrollTo({top: document.querySelector('.car-sec') ? document.querySelector('.car-sec').offsetTop - 80 : 0, behavior:'smooth'}); }
 
         async function applyFilters() {
             var search = (document.getElementById('car-search') || {value:''}).value.toLowerCase();

@@ -118,6 +118,10 @@
     var overlay  = document.getElementById('sidebar-overlay');
 
     function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+        document.getElementById('btn-add-category').addEventListener('click', function() {
+        document.getElementById('cat-form').scrollIntoView({behavior:'smooth'});
+        document.getElementById('cat-name').focus();
+    });
     document.getElementById('sidebar-toggle').addEventListener('click', function() {
         if (window.innerWidth <= 768) { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); }
         else { sidebar.classList.toggle('collapsed'); }
@@ -133,7 +137,7 @@
     async function renderCategories() {
         var tbody2 = document.getElementById('cat-tbody');
         tbody2.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border spinner-border-sm text-warning me-2" role="status"></div> Loading...</td></tr>';
-        var categories = await CategoryStore.getAll();
+        var categories; try { categories = await CategoryStore.getAll(); } catch(e) { categories = []; } categories = categories || [];
         allCars = allCars.length ? allCars : await CarStore.getAll();
 
         document.getElementById('cat-count').textContent = categories.length + ' category(s)';

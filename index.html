@@ -87,8 +87,8 @@
                     </div>
                     <div class="main-menu__right">
                         <div class="search-heart-icon d-sm-flex d-none align-items-center gap-24">
-                            <a class="cus-btn" href="cars.html">
-                <span class="text">Book Now</span>
+                            <a class="cus-btn" href="request-car.html">
+                <span class="text">Request a Car</span>
                 <span class="">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <g clip-path="url(#clip0_11617_5921)">
@@ -1873,7 +1873,7 @@
                                 <p class="mb-8">Not Sure About Something?</p>
                                 <h4>Get a Call Back From Us.</h4>
                             </div>
-                            <form action="post" class="contact-form">
+                            <form id="home-contact-form" action="#" class="contact-form" novalidate>
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="input-block mb-24">
@@ -1920,7 +1920,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="border-0 cus-btn-3">Learn More</button>
+                                        <button type="submit" class="border-0 cus-btn-3">Send Message</button>
                                     </div>
                                     <div id="message" class="alert-msg"></div>
                                 </div>
@@ -2111,6 +2111,36 @@
     });
 </script>
 
-</body>
+<script>
+(function() {
+    var f = document.getElementById('home-contact-form');
+    if (!f) return;
+    f.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var name  = (f.querySelector('#name')        || {value:''}).value.trim();
+        var lname = (f.querySelector('#lsname')      || {value:''}).value.trim();
+        var phone = (f.querySelector('#phoneNumber2') || {value:''}).value.trim();
+        var email = (f.querySelector('#email')        || {value:''}).value.trim();
+        var msg   = (f.querySelector('#comments')     || {value:''}).value.trim();
+        if (!name || !email) { alert('Please fill in your name and email.'); return; }
+        var btn = f.querySelector('[type="submit"]');
+        if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+        try {
+            var result = await OrderStore.submit({
+                car_id: null, car_name: 'General Inquiry',
+                customer_name: name + ' ' + lname,
+                email: email, phone: phone,
+                message: msg || 'General inquiry from homepage contact form.',
+                total_price: 0, status: 'New'
+            });
+            if (result) {
+                alert('Message sent! We will contact you shortly.');
+                f.reset();
+            } else { alert('Something went wrong. Please try again.'); }
+        } catch(err) { alert('Error: ' + (err.message||'Unknown')); }
+        finally { if (btn) { btn.disabled = false; btn.textContent = 'Send Message'; } }
+    });
+})();
+</script></body>
 
 </html>
