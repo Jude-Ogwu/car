@@ -1,15 +1,26 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Categories — CarVoyage Admin</title>
+    <title>Categories - CarVoyage Admin</title>
     <link rel="shortcut icon" href="../assets/media/favicon.png">
     <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
+    <style>
+        .cat-thumb { width:52px;height:40px;object-fit:cover;border-radius:6px;background:#f1f3f5; }
+        .status-pill { padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700; }
+        .status-pill.published { background:#d1fae5;color:#065f46; }
+        .status-pill.draft     { background:#f3f4f6;color:#6b7280; }
+        .modal-img-preview { width:100%;height:120px;object-fit:cover;border-radius:8px;display:none;margin-top:8px; }
+        .modal-img-preview.show { display:block; }
+        .cars-chip { display:inline-block;background:#f1f5f9;border-radius:6px;padding:2px 8px;font-size:11px;margin:2px; }
+    </style>
 </head>
 <body class="admin-body">
+
+<!-- SIDEBAR -->
 <div class="admin-sidebar" id="sidebar">
     <div class="sidebar-brand">
         <img src="../assets/media/logo.png" alt="CarVoyage" class="sidebar-logo">
@@ -29,191 +40,332 @@
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div class="admin-main">
+    <!-- TOPBAR -->
     <header class="admin-topbar">
         <button class="sidebar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
         <div class="topbar-title"><h5>Categories</h5></div>
-        <div class="topbar-right">
-            <button class="btn btn-primary btn-sm" id="btn-add-category">
-                <i class="fa-solid fa-plus me-2"></i>Add Category
+        <div class="topbar-right d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm" onclick="renderCategories()">
+                <i class="fa-solid fa-rotate-right me-1"></i>Refresh
+            </button>
+            <button class="btn btn-primary btn-sm" id="btn-add-category" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                <i class="fa-solid fa-plus me-2"></i>New Category
             </button>
         </div>
     </header>
 
     <div class="admin-content">
-        <div class="row g-4">
-            <!-- Add Category Form -->
-            <div class="col-lg-4">
-                <div class="admin-card">
-                    <div class="admin-card-header">
-                        <h6><i class="fa-solid fa-circle-plus me-2"></i>New Category</h6>
-                    </div>
-                    <form id="cat-form" class="p-3">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold" style="font-size:13px;">Category Name <span class="text-danger">*</span></label>
-                            <input type="text" id="cat-name" class="form-control" placeholder="e.g. Electric, Sports, Luxury..." required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold" style="font-size:13px;">Description <span class="text-muted">(optional)</span></label>
-                            <textarea id="cat-desc" class="form-control" rows="3" placeholder="Brief description of this category..."></textarea>
-                        </div>
-                        <div id="cat-feedback" class="mb-2" style="display:none;"></div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fa-solid fa-floppy-disk me-2"></i>Save Category
-                        </button>
-                    </form>
-                </div>
-
-                <div class="admin-card mt-4">
-                    <div class="admin-card-header">
-                        <h6><i class="fa-solid fa-circle-info me-2"></i>About Categories</h6>
-                    </div>
-                    <div class="p-3" style="font-size:13px; color:#6b7280; line-height:1.7;">
-                        <p>Categories group your car listings, making it easier for visitors to filter and browse inventory.</p>
-                        <p class="mb-0">Categories added here will appear in the <strong>Add/Edit Car</strong> form dropdown automatically.</p>
-                        <hr class="my-3">
-                        <p class="mb-0">
-                            <i class="fa-solid fa-triangle-exclamation text-warning me-1"></i>
-                            Deleting a category does <strong>not</strong> delete cars in it — it only removes the category option.
-                        </p>
-                    </div>
+        <!-- Stats row -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-4">
+                <div class="admin-card text-center p-3">
+                    <h4 id="stat-total" class="color-primary fw-700 mb-1">—</h4>
+                    <p class="text-muted mb-0" style="font-size:13px;">Total Categories</p>
                 </div>
             </div>
-
-            <!-- Categories Table -->
-            <div class="col-lg-8">
-                <div class="admin-card">
-                    <div class="admin-card-header">
-                        <h6><i class="fa-solid fa-list me-2"></i>All Categories</h6>
-                        <span class="text-muted" style="font-size:13px;" id="cat-count"></span>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table admin-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th style="width:50px;">#</th>
-                                    <th>Category Name</th>
-                                    <th>Description</th>
-                                    <th>Cars Using</th>
-                                    <th style="width:100px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cat-tbody">
-                                <tr><td colspan="5" class="text-center py-4 text-muted">Loading categories...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="col-sm-4">
+                <div class="admin-card text-center p-3">
+                    <h4 id="stat-published" class="color-primary fw-700 mb-1">—</h4>
+                    <p class="text-muted mb-0" style="font-size:13px;">Published</p>
                 </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="admin-card text-center p-3">
+                    <h4 id="stat-draft" class="color-primary fw-700 mb-1">—</h4>
+                    <p class="text-muted mb-0" style="font-size:13px;">Draft</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Table -->
+        <div class="admin-card">
+            <div class="admin-card-header d-flex align-items-center justify-content-between">
+                <h6><i class="fa-solid fa-tags me-2"></i>All Categories</h6>
+                <input type="text" id="cat-search" class="form-control form-control-sm" style="width:220px;" placeholder="Search categories...">
+            </div>
+            <div class="table-responsive">
+                <table class="table admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width:70px;">Image</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Cars</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cat-tbody">
+                        <tr><td colspan="6" class="text-center py-4">
+                            <div class="spinner-border spinner-border-sm text-warning me-2" role="status"></div> Loading categories...
+                        </td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<script src="../assets/js/vendor/bootstrap.min.js"></script>
+<!-- ADD / EDIT MODAL -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs mb-3" id="catModalTabs">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-details">Details</button></li>
+                    <li class="nav-item"><button class="nav-link" id="tab-cars-btn" data-bs-toggle="tab" data-bs-target="#tab-cars">Products in Category</button></li>
+                </ul>
+                <div class="tab-content">
+                    <!-- DETAILS TAB -->
+                    <div class="tab-pane fade show active" id="tab-details">
+                        <form id="cat-form" novalidate>
+                            <input type="hidden" id="cat-id">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-semibold" style="font-size:13px;">Category Name <span class="text-danger">*</span></label>
+                                    <input type="text" id="cat-name" class="form-control" placeholder="e.g. Sedan, SUV, Electric" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold" style="font-size:13px;">Status</label>
+                                    <select id="cat-status" class="form-select">
+                                        <option value="Published">Published</option>
+                                        <option value="Draft">Draft</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold" style="font-size:13px;">Description</label>
+                                    <textarea id="cat-desc" class="form-control" rows="3" placeholder="Brief description of this category..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold" style="font-size:13px;">Thumbnail / Category Image URL</label>
+                                    <input type="text" id="cat-thumbnail" class="form-control" placeholder="https://... or assets/media/cars/img.jpg" oninput="previewCatImg(this.value)">
+                                    <img id="cat-img-preview" class="modal-img-preview" alt="Preview">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- PRODUCTS TAB -->
+                    <div class="tab-pane fade" id="tab-cars">
+                        <p class="text-muted" style="font-size:13px;margin-bottom:12px;">Cars currently in this category. To move a car, edit its category from <a href="cars.html">Manage Cars</a>.</p>
+                        <div id="cats-cars-list" class="row g-3">
+                            <div class="col-12 text-center text-muted py-3"><small>Save the category first, then view its products here.</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="cat-save-draft-btn" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-floppy-disk me-1"></i>Save as Draft
+                </button>
+                <button type="button" id="cat-save-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-globe me-1"></i>Save &amp; Publish
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+    <div id="admin-toast" class="toast align-items-center text-white border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body fw-semibold" id="toast-msg"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/css/vendor/../../../assets/js/vendor/bootstrap.min.js" onerror="this.remove()"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/js/data.js"></script>
 <script>
-    AdminAuth.requireAuth();
+    // Auth guard
+    if (typeof AdminAuth === 'undefined' || !AdminAuth.isLoggedIn()) window.location.href = 'login.html';
 
-    var sidebar  = document.getElementById('sidebar');
-    var overlay  = document.getElementById('sidebar-overlay');
+    var modal = new bootstrap.Modal(document.getElementById('categoryModal'));
+    var editingId = null;
+    var allCars = [];
 
-    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
-        document.getElementById('btn-add-category').addEventListener('click', function() {
-        document.getElementById('cat-form').scrollIntoView({behavior:'smooth'});
-        document.getElementById('cat-name').focus();
-    });
+    // Sidebar
     document.getElementById('sidebar-toggle').addEventListener('click', function() {
-        if (window.innerWidth <= 768) { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); }
-        else { sidebar.classList.toggle('collapsed'); }
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('show');
     });
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('show');
+    }
     document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
+    document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
     document.getElementById('logout-btn').addEventListener('click', function(e) {
         e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
     });
 
-    var allCars = [];
+    function showToast(msg, type) {
+        var el = document.getElementById('admin-toast');
+        el.className = 'toast align-items-center text-white border-0 bg-' + (type || 'success');
+        document.getElementById('toast-msg').textContent = msg;
+        new bootstrap.Toast(el, { delay: 4000 }).show();
+    }
 
-    async function renderCategories() {
-        var tbody2 = document.getElementById('cat-tbody');
-        tbody2.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border spinner-border-sm text-warning me-2" role="status"></div> Loading...</td></tr>';
-        var categories; try { categories = await CategoryStore.getAll(); } catch(e) { categories = []; } categories = categories || [];
-        allCars = allCars.length ? allCars : await CarStore.getAll();
+    function previewCatImg(url) {
+        var img = document.getElementById('cat-img-preview');
+        if (url) { img.src = url; img.classList.add('show'); }
+        else      { img.classList.remove('show'); }
+    }
 
-        document.getElementById('cat-count').textContent = categories.length + ' category(s)';
-        var tbody = document.getElementById('cat-tbody');
+    function clearForm() {
+        editingId = null;
+        document.getElementById('cat-form').reset();
+        document.getElementById('cat-id').value = '';
+        document.getElementById('cat-img-preview').classList.remove('show');
+        document.getElementById('modal-title').textContent = 'New Category';
+        document.getElementById('cats-cars-list').innerHTML = '<div class="col-12 text-center text-muted py-3"><small>Save the category first, then view its products here.</small></div>';
+        document.getElementById('cat-save-btn').innerHTML = '<i class="fa-solid fa-globe me-1"></i>Save &amp; Publish';
+    }
 
-        if (!categories.length) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No categories yet. Add your first one!</td></tr>';
+    async function loadCarsForCategory(categoryName) {
+        if (!categoryName) return;
+        var container = document.getElementById('cats-cars-list');
+        container.innerHTML = '<div class="col-12 text-center py-3"><div class="spinner-border spinner-border-sm text-warning"></div></div>';
+        var cars = (allCars.length ? allCars : await CarStore.getAll()).filter(function(c) { return c.category === categoryName; });
+        if (!cars.length) {
+            container.innerHTML = '<div class="col-12 text-center text-muted py-3"><small>No cars in this category yet.</small></div>';
             return;
         }
-
-        tbody.innerHTML = categories.map(function(cat, i) {
-            var carsUsing = allCars.filter(function(c) {
-                return c.category && c.category.toLowerCase() === cat.name.toLowerCase();
-            }).length;
-            return '<tr>' +
-                '<td><span class="badge bg-light text-dark border">' + (i + 1) + '</span></td>' +
-                '<td><strong>' + cat.name + '</strong></td>' +
-                '<td><small class="text-muted">' + (cat.description || '—') + '</small></td>' +
-                '<td><span class="badge bg-primary">' + carsUsing + ' car' + (carsUsing !== 1 ? 's' : '') + '</span></td>' +
-                '<td>' +
-                '<button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(' + cat.id + ', \'' + cat.name.replace(/'/g, "\\'") + '\')" title="Delete">' +
-                '<i class="fa-solid fa-trash"></i></button></td>' +
-                '</tr>';
+        container.innerHTML = cars.map(function(car) {
+            var badge = car.status === 'Draft' ? '<span class="badge bg-secondary ms-1">Draft</span>' : '';
+            return '<div class="col-sm-6 col-md-4">' +
+                '<div class="d-flex align-items-center gap-2 p-2 border rounded">' +
+                '<img src="../' + (car.thumbnail || 'assets/media/blog/blog-1.jpg') + '" style="width:50px;height:40px;object-fit:cover;border-radius:6px;" onerror="this.src=\'../assets/media/blog/blog-1.jpg\'">' +
+                '<div><p style="font-size:13px;font-weight:600;margin:0;">' + car.name + badge + '</p>' +
+                '<small class="text-muted">$' + (car.price||0).toLocaleString() + '</small></div>' +
+                '</div></div>';
         }).join('');
     }
 
+    async function editCategory(id) {
+        var cats = await CategoryStore.getAll();
+        var cat = cats.find(function(c) { return c.id === id; });
+        if (!cat) return;
+        clearForm();
+        editingId = id;
+        document.getElementById('cat-id').value = id;
+        document.getElementById('cat-name').value = cat.name || '';
+        document.getElementById('cat-desc').value = cat.description || '';
+        document.getElementById('cat-status').value = cat.status || 'Published';
+        document.getElementById('cat-thumbnail').value = cat.thumbnail || '';
+        if (cat.thumbnail) previewCatImg(cat.thumbnail);
+        document.getElementById('modal-title').textContent = 'Edit: ' + cat.name;
+        document.getElementById('cat-save-btn').innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i>Save Changes';
+        loadCarsForCategory(cat.name);
+        modal.show();
+    }
+
+    async function toggleStatus(id, currentStatus) {
+        var result = await CategoryStore.toggleStatus(id, currentStatus);
+        if (result) { showToast('Status updated to ' + (currentStatus === 'Published' ? 'Draft' : 'Published'), 'success'); renderCategories(); }
+    }
+
     async function deleteCategory(id, name) {
-        if (!confirm('Delete category "' + name + '"?\nCars using this category will keep their data, but the category won\'t appear in dropdown lists.')) return;
+        if (!confirm('Delete category "' + name + '"? Cars in this category will not be deleted but will have no category.')) return;
         await CategoryStore.delete(id);
-        showFeedback('Category "' + name + '" deleted.', 'warning');
+        showToast('Category deleted.', 'success');
         renderCategories();
     }
 
-    function showFeedback(msg, type) {
-        var el = document.getElementById('cat-feedback');
-        el.className = 'alert alert-' + (type || 'success');
-        el.textContent = msg;
-        el.style.display = 'block';
-        setTimeout(function() { el.style.display = 'none'; }, 4000);
+    async function saveCategory(forcedStatus) {
+        var name = document.getElementById('cat-name').value.trim();
+        if (!name) { showToast('Category name is required.', 'danger'); return; }
+        var desc   = document.getElementById('cat-desc').value.trim();
+        var thumb  = document.getElementById('cat-thumbnail').value.trim();
+        var status = forcedStatus || document.getElementById('cat-status').value || 'Published';
+
+        var saveBtn = document.getElementById('cat-save-btn');
+        var draftBtn = document.getElementById('cat-save-draft-btn');
+        saveBtn.disabled = true; draftBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+        try {
+            var result;
+            if (editingId) {
+                result = await CategoryStore.update(editingId, { name, description: desc, thumbnail: thumb, status });
+            } else {
+                result = await CategoryStore.add(name, desc, thumb, status);
+            }
+            if (result) {
+                showToast(editingId ? 'Category updated!' : 'Category added!', 'success');
+                modal.hide();
+                clearForm();
+                renderCategories();
+            } else {
+                showToast('Save failed — category may already exist.', 'danger');
+            }
+        } catch(err) {
+            showToast('Error: ' + (err.message || 'Unknown'), 'danger');
+        } finally {
+            saveBtn.disabled = false; draftBtn.disabled = false;
+            saveBtn.innerHTML = editingId ? '<i class="fa-solid fa-floppy-disk me-1"></i>Save Changes' : '<i class="fa-solid fa-globe me-1"></i>Save &amp; Publish';
+        }
     }
 
-    document.getElementById('cat-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        var name = document.getElementById('cat-name').value.trim();
-        var desc = document.getElementById('cat-desc').value.trim();
+    document.getElementById('cat-save-btn').addEventListener('click', function() { saveCategory(null); });
+    document.getElementById('cat-save-draft-btn').addEventListener('click', function() { saveCategory('Draft'); });
+    document.getElementById('categoryModal').addEventListener('hidden.bs.modal', clearForm);
 
-        if (!name) { showToast('Category name is required.', 'danger'); return; }
+    // Search
+    document.getElementById('cat-search').addEventListener('input', renderCategories);
 
-        var btn = this.querySelector('[type="submit"]');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Saving...';
+    async function renderCategories() {
+        var tbody = document.getElementById('cat-tbody');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-warning me-2" role="status"></div> Loading...</td></tr>';
+        var cats = [];
+        try { cats = await CategoryStore.getAll(); } catch(e) { cats = []; }
+        cats = cats || [];
+        if (!allCars.length) { try { allCars = await CarStore.getAll(); } catch(e) {} }
 
-        var result = await CategoryStore.add(name, desc);
+        var search = document.getElementById('cat-search').value.toLowerCase();
+        var filtered = search ? cats.filter(function(c) { return (c.name||'').toLowerCase().includes(search); }) : cats;
 
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk me-2"></i>Save Category';
+        // Stats
+        document.getElementById('stat-total').textContent = cats.length;
+        document.getElementById('stat-published').textContent = cats.filter(function(c){ return c.status !== 'Draft'; }).length;
+        document.getElementById('stat-draft').textContent = cats.filter(function(c){ return c.status === 'Draft'; }).length;
 
-        if (result) {
-            document.getElementById('cat-name').value = '';
-            document.getElementById('cat-desc').value = '';
-            showFeedback('Category "' + name + '" added successfully!', 'success');
-            renderCategories();
-        } else {
-            showToast('Could not save. Category may already exist.', 'danger');
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No categories found.</td></tr>';
+            return;
         }
-    });
+
+        tbody.innerHTML = filtered.map(function(cat) {
+            var carCount = allCars.filter(function(c){ return c.category === cat.name && c.status !== 'Draft'; }).length;
+            var status   = cat.status || 'Published';
+            var isPub    = status !== 'Draft';
+            var thumb    = cat.thumbnail ? '<img src="../' + cat.thumbnail + '" class="cat-thumb" onerror="this.style.display=\'none\'">' : '<div class="cat-thumb d-flex align-items-center justify-content-center bg-light"><i class="fa-solid fa-image text-muted"></i></div>';
+            return '<tr>' +
+                '<td>' + thumb + '</td>' +
+                '<td><strong>' + cat.name + '</strong></td>' +
+                '<td><small class="text-muted">' + (cat.description || '—') + '</small></td>' +
+                '<td><span class="status-pill ' + (isPub ? 'published' : 'draft') + '">' + status + '</span></td>' +
+                '<td><span class="badge bg-light text-dark">' + carCount + ' car' + (carCount !== 1 ? 's' : '') + '</span></td>' +
+                '<td>' +
+                '<button class="btn btn-sm btn-outline-primary me-1" onclick="editCategory(' + cat.id + ')" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>' +
+                '<button class="btn btn-sm btn-outline-' + (isPub ? 'warning' : 'success') + ' me-1" onclick="toggleStatus(' + cat.id + ',\'' + status + '\')" title="' + (isPub ? 'Unpublish' : 'Publish') + '"><i class="fa-solid fa-' + (isPub ? 'eye-slash' : 'globe') + '"></i></button>' +
+                '<button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(' + cat.id + ',\'' + cat.name.replace(/'/g,"\\'") + '\')" title="Delete"><i class="fa-solid fa-trash"></i></button>' +
+                '</td></tr>';
+        }).join('');
+    }
+
+    // Open modal fresh when clicking New Category button
+    document.getElementById('btn-add-category').addEventListener('click', function() { clearForm(); });
 
     renderCategories();
-
-    function showToast(msg, type) {
-        var toastEl = document.getElementById('admin-toast');
-        var msgEl   = document.getElementById('toast-msg');
-        msgEl.textContent = msg;
-        toastEl.className = 'toast align-items-center text-white border-0 bg-' + (type || 'success');
-        new bootstrap.Toast(toastEl, { delay: 4000 }).show();
-    }
 </script>
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100"><div id="admin-toast" class="toast align-items-center text-white border-0" role="alert"><div class="d-flex"><div class="toast-body fw-semibold" id="toast-msg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div></body>
+</body>
 </html>

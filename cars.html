@@ -72,7 +72,7 @@
                                     <a href="javascript:void(0); " class="active">Listing</a>
                                     <ul>
                                         <li> <a href="cars.html">Cars</a></li>
-                                        <li> <a href="cars.html#categories">Car Categories</a></li>
+                                        <li> <a href="categories.html">Car Categories</a></li>
                                     </ul>
                                 </li>
 
@@ -1414,6 +1414,15 @@
 
         var allCars = await CarStore.getAll();
         loadCategoryGrid();
+        // Auto-apply URL ?category= param if present
+        var urlParams = new URLSearchParams(window.location.search);
+        var urlCat = urlParams.get('category');
+        if (urlCat) {
+            var selEl = document.getElementById('filter-category');
+            if (selEl) { selEl.value = urlCat; }
+            var catSection = document.getElementById('categories');
+            if (catSection) setTimeout(function(){ catSection.scrollIntoView({behavior:'smooth'}); }, 400);
+        }
 
         function renderCars(cars) {
             var html = '';
