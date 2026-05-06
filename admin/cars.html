@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -174,6 +174,30 @@
                                 <small class="text-muted">JPG, PNG, WebP supported. Max 2MB.</small>
                             </div>
                             <img id="img-preview" class="img-preview" alt="Preview">
+                        </div>
+
+                        <!-- Gallery Images -->
+                        <div class="col-12">
+                            <label class="form-label fw-600">Gallery Images <small class="text-muted fw-normal">(optional — up to 4 extra photos for product detail)</small></label>
+                            <div id="gallery-inputs">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 1 — https://... or assets/media/cars/img.jpg">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 2 (optional)">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 3 (optional)">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 4 (optional)">
+                                </div>
+                            </div>
+                            <small class="text-muted">These images appear in the car detail page gallery. The Thumbnail above is the main listing image.</small>
                         </div>
 
                         <div class="col-12">
@@ -365,6 +389,7 @@
         uploadedImageData = null;
         document.getElementById('car-id').value = '';
         document.getElementById('car-form').reset();
+        document.querySelectorAll('.gallery-url').forEach(function(inp) { inp.value = ''; });
         document.getElementById('car-category-custom').classList.add('d-none');
         document.getElementById('img-preview').classList.remove('visible');
         document.getElementById('modal-title').textContent = 'Add New Car';
@@ -405,6 +430,10 @@
         document.getElementById('car-hp').value = car.horsepower || '';
         document.getElementById('car-color').value = car.color || '';
         document.getElementById('car-thumbnail').value = car.thumbnail || '';
+        // Populate gallery images (excluding thumbnail)
+        var galleryInputs = document.querySelectorAll('.gallery-url');
+        var galleryImgs = Array.isArray(car.images) ? car.images.filter(function(u) { return u && u !== car.thumbnail; }) : [];
+        galleryInputs.forEach(function(inp, idx) { inp.value = galleryImgs[idx] || ''; });
         document.getElementById('car-description').value = car.description || '';
         document.getElementById('car-badge').value = car.badge || '';
         document.getElementById('save-btn').innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i>Save Changes';
@@ -449,7 +478,11 @@
             thumbnail: getThumbnail(),
             description: document.getElementById('car-description').value,
             badge: document.getElementById('car-badge').value || null,
-            images: [getThumbnail()].filter(Boolean),
+            images: (function() {
+                var thumb = getThumbnail();
+                var gallery = Array.from(document.querySelectorAll('.gallery-url')).map(function(i) { return i.value.trim(); }).filter(Boolean);
+                return [thumb].concat(gallery).filter(Boolean);
+            }()),
             rating: 4.5,
             reviews: 0
         };

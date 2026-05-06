@@ -131,6 +131,8 @@
     var allCars = [];
 
     async function renderCategories() {
+        var tbody2 = document.getElementById('cat-tbody');
+        tbody2.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border spinner-border-sm text-warning me-2" role="status"></div> Loading...</td></tr>';
         var categories = await CategoryStore.getAll();
         allCars = allCars.length ? allCars : await CarStore.getAll();
 
