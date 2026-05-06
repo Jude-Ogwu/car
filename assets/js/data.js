@@ -10,9 +10,10 @@
  */
 
 // ─── SUPABASE CONFIGURATION ──────────────────────────────────────────────────
-// Credentials loaded from assets/js/config.js (gitignored)
-const SUPABASE_URL      = (window.CARVOYAGE_CONFIG || {}).SUPABASE_URL      || '';
-const SUPABASE_ANON_KEY = (window.CARVOYAGE_CONFIG || {}).SUPABASE_ANON_KEY || '';
+// Credentials: loaded from config.js if available, hardcoded as fallback
+// The anon/publishable key is safe to be in client code — Supabase RLS protects the data.
+const SUPABASE_URL      = (window.CARVOYAGE_CONFIG || {}).SUPABASE_URL      || 'https://krrmrowmfkfcdycnfvjg.supabase.co';
+const SUPABASE_ANON_KEY = (window.CARVOYAGE_CONFIG || {}).SUPABASE_ANON_KEY || 'sb_publishable_a2BPr-FHkue1wQx46vnCwA__vU_oeqM';
 
 // Lazy initialiser — safe even if CDN script loads slightly after this file
 let _supabaseClient = null;
