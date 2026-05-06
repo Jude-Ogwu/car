@@ -27,6 +27,16 @@ function getSupabase() {
   return null;
 }
 
+// ─── QUERY TIMEOUT HELPER ─────────────────────────────────────────────────────
+// Wraps any Supabase promise with a 12s timeout so the UI never hangs forever.
+// Supabase free tier can take up to 30s on cold start — this gives a clean error.
+function sbQuery(promise, timeoutMs) {
+  timeoutMs = timeoutMs || 12000;
+  var timer = new Promise(function(_, reject) {
+    setTimeout(function() { reject(new Error('DB_TIMEOUT')); }, timeoutMs);
+  });
+  return Promise.race([promise, timer]);
+}
 
 // ─── ADMIN AUTH ───────────────────────────────────────────────────────────────
 const AdminAuth = {
@@ -52,23 +62,28 @@ const CarStore = {
 
   async getAll() {
     const sb = getSupabase(); if (!sb) return [];
-    const { data, error } = await sb
-      .from('cars')
-      .select('*')
-      .order('id', { ascending: false });
-    if (error) { console.error('getAll cars:', error); return []; }
-    return data || [];
+    try {
+      const { data, error } = await sbQuery(
+        sb.from('cars').select('*').order('id', { ascending: false })
+      );
+      if (error) { console.error('getAll cars:', error); return []; }
+      return data || [];
+    } catch(e) {
+      if ((e.message||'') === 'DB_TIMEOUT') console.warn('CarStore.getAll: DB took >12s (cold start?)');
+      else console.error('getAll cars:', e);
+      return [];
+    }
   },
 
   async getById(id) {
     const sb = getSupabase(); if (!sb) return null;
-    const { data, error } = await sb
-      .from('cars')
-      .select('*')
-      .eq('id', parseInt(id))
-      .single();
-    if (error) { console.error('getById car:', error); return null; }
-    return data;
+    try {
+      const { data, error } = await sbQuery(
+        sb.from('cars').select('*').eq('id', parseInt(id)).single()
+      );
+      if (error) { console.error('getById car:', error); return null; }
+      return data;
+    } catch(e) { console.error('getById car timeout:', e); return null; }
   },
 
   async save(car) {
@@ -151,12 +166,19 @@ const CategoryStore = {
 
   async getAll() {
     const sb = getSupabase(); if (!sb) return [];
-    const { data, error } = await sb.from('categories').select('*').order('name',{ascending:true});
-    if (error) {
-      console.warn('categories fallback:', error.message);
-      return (await CarStore.getCategories()).map((name,i)=>({id:i+1,name,status:'Published'}));
+    try {
+      const { data, error } = await sbQuery(
+        sb.from('categories').select('*').order('name', { ascending: true })
+      );
+      if (error) {
+        console.warn('categories fallback:', error.message);
+        return (await CarStore.getCategories()).map((name,i) => ({id:i+1,name,status:'Published'}));
+      }
+      return data || [];
+    } catch(e) {
+      console.warn('CategoryStore.getAll timeout — using car data fallback');
+      return (await CarStore.getCategories()).map((name,i) => ({id:i+1,name,status:'Published'}));
     }
-    return data || [];
   },
 
   async add(name, description, thumbnail, status) {
@@ -198,12 +220,17 @@ const OrderStore = {
 
   async getAll() {
     const sb = getSupabase(); if (!sb) return [];
-    const { data, error } = await sb
-      .from('orders')
-      .select('*')
-      .order('id', { ascending: false });
-    if (error) { console.error('getAll orders:', error); return []; }
-    return data || [];
+    try {
+      const { data, error } = await sbQuery(
+        sb.from('orders').select('*').order('id', { ascending: false })
+      );
+      if (error) { console.error('getAll orders:', error); return []; }
+      return data || [];
+    } catch(e) {
+      if ((e.message||'') === 'DB_TIMEOUT') console.warn('OrderStore.getAll: DB took >12s (cold start?)');
+      else console.error('getAll orders:', e);
+      return [];
+    }
   },
 
   async getById(id) {
