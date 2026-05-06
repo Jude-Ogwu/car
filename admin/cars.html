@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,6 @@
     <title>Manage Cars — CarVoyage Admin</title>
     <link rel="shortcut icon" href="../assets/media/favicon.png">
     <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/vendor/font-awesome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
     <style>
@@ -100,7 +99,7 @@
                         <!-- Category with custom option -->
                         <div class="col-md-4">
                             <label class="form-label fw-600">Category *</label>
-                            <select id="car-category" class="form-select" required onchange="handleCategoryChange(this)">
+                            <select id="car-category" class="form-select" onchange="handleCategoryChange(this)">
                                 <option value="">Loading categories...</option>
                             </select>
                             <input type="text" id="car-category-custom" class="form-control mt-2 d-none" placeholder="Type new category name...">
@@ -246,7 +245,13 @@
 
     // ── Category dropdown: load from DB ──────────────────────────────────────
     async function loadCategories() {
-        var cats = await CategoryStore.getAll();
+        var DEFAULTS = ['Sedan','SUV','Coupe','Wagon','Sports','Truck','Van','Hatchback','Convertible','Electric','Hybrid','Luxury'];
+        var cats = [];
+        try { cats = await CategoryStore.getAll(); } catch(e) {}
+        // Fallback to hardcoded list if DB returns nothing
+        if (!cats || !cats.length) {
+            cats = DEFAULTS.map(function(n, i) { return { id: i+1, name: n }; });
+        }
         var sel = document.getElementById('car-category');
         var current = sel.value;
         sel.innerHTML = '<option value="">Select category...</option>' +
@@ -424,27 +429,27 @@
 
     async function saveCar(targetStatus) {
         var category = getCategory();
-        if (!category) { alert('Please select or enter a category.'); return; }
+        if (!category) { alert('Please select a category before saving.'); return; }
 
         var car = {
             id: editingId ? parseInt(document.getElementById('car-id').value) : null,
-            name: document.getElementById('car-name').value,
-            brand: document.getElementById('car-brand').value,
+            name: document.getElementById('car-name').value.trim(),
+            brand: document.getElementById('car-brand').value.trim(),
             category: category,
             year: parseInt(document.getElementById('car-year').value),
-            price: parseInt(document.getElementById('car-price').value),
+            price: parseFloat(document.getElementById('car-price').value),
             mileage: parseInt(document.getElementById('car-mileage').value) || 0,
             fuel: document.getElementById('car-fuel').value,
             transmission: document.getElementById('car-transmission').value,
             condition: document.getElementById('car-condition').value,
-            status: targetStatus || document.getElementById('car-status').value,
+            status: targetStatus || document.getElementById('car-status').value || 'Available',
             engine: document.getElementById('car-engine').value,
             horsepower: parseInt(document.getElementById('car-hp').value) || 0,
             color: document.getElementById('car-color').value,
             thumbnail: getThumbnail(),
             description: document.getElementById('car-description').value,
             badge: document.getElementById('car-badge').value || null,
-            images: [getThumbnail()],
+            images: [getThumbnail()].filter(Boolean),
             rating: 4.5,
             reviews: 0
         };
@@ -453,11 +458,25 @@
         var draftBtn = document.getElementById('save-draft-btn');
         saveBtn.disabled = true;
         draftBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
 
-        await CarStore.save(car);
-        modal.hide();
-        clearForm();
-        renderCars();
+        try {
+            var result = await CarStore.save(car);
+            if (result) {
+                modal.hide();
+                clearForm();
+                showToast(editingId ? 'Car updated successfully!' : 'Car added successfully!', 'success');
+                renderCars();
+            } else {
+                showToast('Save failed. Check your Supabase connection or RLS settings.', 'danger');
+            }
+        } catch(err) {
+            showToast('Error: ' + (err.message || 'Unknown error'), 'danger');
+        } finally {
+            saveBtn.disabled = false;
+            draftBtn.disabled = false;
+            saveBtn.innerHTML = editingId ? '<i class="fa-solid fa-floppy-disk me-1"></i>Save Changes' : '<i class="fa-solid fa-globe me-1"></i>Publish Car';
+        }
     }
 
     document.getElementById('btn-add-car').addEventListener('click', function() { clearForm(); modal.show(); });
@@ -488,6 +507,24 @@
     document.getElementById('filter-status').addEventListener('change', renderCars);
     loadCategories();
     renderCars();
+
+    // ── Toast helper ──────────────────────────────────────────────────────────
+    function showToast(msg, type) {
+        var toastEl = document.getElementById('admin-toast');
+        var msgEl   = document.getElementById('toast-msg');
+        msgEl.textContent = msg;
+        toastEl.className = 'toast align-items-center text-white border-0 bg-' + (type || 'success');
+        var t = new bootstrap.Toast(toastEl, { delay: 4000 });
+        t.show();
+    }
 </script>
-</body>
+<!-- Toast notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+  <div id="admin-toast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive">
+    <div class="d-flex">
+      <div class="toast-body fw-semibold" id="toast-msg">Saved!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div></body>
 </html>

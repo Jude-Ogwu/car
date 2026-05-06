@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,6 @@
     <title>Categories — CarVoyage Admin</title>
     <link rel="shortcut icon" href="../assets/media/favicon.png">
     <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/vendor/font-awesome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
 </head>
@@ -179,7 +178,7 @@
         var name = document.getElementById('cat-name').value.trim();
         var desc = document.getElementById('cat-desc').value.trim();
 
-        if (!name) { showFeedback('Category name is required.', 'danger'); return; }
+        if (!name) { showToast('Category name is required.', 'danger'); return; }
 
         var btn = this.querySelector('[type="submit"]');
         btn.disabled = true;
@@ -196,11 +195,19 @@
             showFeedback('Category "' + name + '" added successfully!', 'success');
             renderCategories();
         } else {
-            showFeedback('Could not save. Category may already exist.', 'danger');
+            showToast('Could not save. Category may already exist.', 'danger');
         }
     });
 
     renderCategories();
+
+    function showToast(msg, type) {
+        var toastEl = document.getElementById('admin-toast');
+        var msgEl   = document.getElementById('toast-msg');
+        msgEl.textContent = msg;
+        toastEl.className = 'toast align-items-center text-white border-0 bg-' + (type || 'success');
+        new bootstrap.Toast(toastEl, { delay: 4000 }).show();
+    }
 </script>
-</body>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100"><div id="admin-toast" class="toast align-items-center text-white border-0" role="alert"><div class="d-flex"><div class="toast-body fw-semibold" id="toast-msg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div></body>
 </html>
