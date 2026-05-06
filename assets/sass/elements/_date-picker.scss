@@ -1,0 +1,90 @@
+
+// .calendar-box {
+//   text-align: center;
+//   padding: 20px;
+//   border: 1px solid #ccc;
+//   border-radius: 10px;
+//   background-color: white;
+//   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+//   width: 300px;
+// }
+
+.calendar-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: $black;
+}
+
+.calendar {
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  position: absolute;
+  z-index: 1;
+  display: none;
+  width: 400px;
+}
+
+.header-calendar {
+  background-color: $accent-1;
+  color: $black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  padding-bottom: 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#prevBtn,
+#nextBtn {
+  background: none;
+  border: none;
+  color: $black;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+#monthYear {
+  color: $black;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  // gap: 5px;
+  padding: 16px;
+}
+
+.day {
+  padding: 16px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.day.current {
+  background-color: #3498db;
+  color: white;
+}
+
+.day.selected {
+  background-color: #2ecc71;
+  color: white;
+}
+
+#dateInput {
+  width: 100%;
+  padding-left: 0;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}

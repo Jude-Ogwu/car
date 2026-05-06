@@ -1,0 +1,18 @@
+.why-choose-sec {
+    .why-choose-img {
+        position: relative;
+
+        .img-content {
+            bottom: clamp(18px, 1.25vw, 48px);
+            left: clamp(18px, 1.25vw, 48px);
+            padding: clamp(20px, 2.5vw, 54px) clamp(18px, 1.25vw, 48px);
+            position: absolute;
+            border-radius: $br-12;
+            background: rgba(255, 255, 255, 0.90);
+
+            .phone-num {
+                font-size: clamp(18px, 1.198vw, 26px);
+            }
+        }
+    }
+}

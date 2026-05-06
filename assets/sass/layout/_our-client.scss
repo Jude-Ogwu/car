@@ -1,0 +1,40 @@
+.our-client-sec {
+    .our-client-1 {
+        background-color: $black;
+        padding: clamp(4px, 0.417vw, 16px) clamp(18px, 1.25vw, 48px) clamp(4px, 0.417vw, 16px) clamp(4px, 0.417vw, 16px);
+        border-radius: 48px;
+        display: flex;
+        align-items: center;
+        gap: $gap-24;
+        margin: 0 12px;
+        cursor: pointer;
+
+        .our-client-img {
+            border-radius: 50%;
+        }
+    }
+
+    .slider-single {
+        background-color: transparent;
+        box-shadow: 0px 45px 12px 0px rgba(0, 0, 0, 0.00), 0px 29px 11px 0px rgba(0, 0, 0, 0.01), 0px 16px 10px 0px rgba(0, 0, 0, 0.05), 0px 7px 7px 0px rgba(0, 0, 0, 0.09), 0px 2px 4px 0px rgba(0, 0, 0, 0.10);
+    }
+
+    .our-client-content {
+        transition: $transition;
+       padding: clamp(18px, 3.75vw, 68px) clamp(14px, 2.5vw, 68px);
+        border-radius: $br-16;
+        border: 1px solid $dark-gray;
+        background-color: $white;
+        margin: 0 12px;
+
+    }
+
+    .slider-nav .slick-slide.is-active {
+        transition: $transition;
+        background-color: $accent-1;
+    }
+}
+
+.slider-nav1 {
+    // gap: $gap-24;
+}

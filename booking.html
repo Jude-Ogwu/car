@@ -1,0 +1,579 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Vehicle Dealers Hub - Premium Car Sales | Find Your Dream Car">
+
+    <title>Vehicle Dealers Hub - Premium Car Sales</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicon.png">
+
+    <!-- All CSS files -->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/vendor/slick.css">
+    <link rel="stylesheet" href="assets/css/vendor/slick-theme.css">
+    <link rel="stylesheet" href="assets/css/vendor/smart_wizard_all.min.css">
+    <link rel="stylesheet" href="assets/css/vendor/ui-autocomplete.css">
+    <link rel="stylesheet" href="assets/css/vendor/ionrangeslider.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+
+
+</head>
+
+<body class="tt-smooth-scroll">
+    <!-- preloader Start -->
+    <div class="loader" id="preloader">
+        <svg class="car" width="102" height="40" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(2 1)" stroke="#002742" fill="none" fill-rule="evenodd" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path class="car__body"
+                    d="M47.293 2.375C52.927.792 54.017.805 54.017.805c2.613-.445 6.838-.337 9.42.237l8.381 1.863c2.59.576 6.164 2.606 7.98 4.531l6.348 6.732 6.245 1.877c3.098.508 5.609 3.431 5.609 6.507v4.206c0 .29-2.536 4.189-5.687 4.189H36.808c-2.655 0-4.34-2.1-3.688-4.67 0 0 3.71-19.944 14.173-23.902zM36.5 15.5h54.01"
+                    stroke-width="3" />
+                <ellipse class="car__wheel--left" stroke-width="3.2" fill="#FFF" cx="83.493" cy="30.25" rx="6.922"
+                    ry="6.808" />
+                <ellipse class="car__wheel--right" stroke-width="3.2" fill="#FFF" cx="46.511" cy="30.25" rx="6.922"
+                    ry="6.808" />
+                <path class="car__line car__line--top" d="M22.5 16.5H2.475" stroke-width="3" />
+                <path class="car__line car__line--middle" d="M20.5 23.5H.4755" stroke-width="3" />
+                <path class="car__line car__line--bottom" d="M25.5 9.5h-19" stroke-width="3" />
+            </g>
+        </svg>
+
+
+    </div>
+    <!-- preloader END -->
+
+    <!-- Main Wrapper Start -->
+    <div id="scroll-container">
+
+        <!-- HEADER MENU START -->
+        <header class="header">
+            <div class="container-fluid">
+                <nav class="navigation d-flex align-items-center justify-content-between py-16">
+                    <a href="index.html" class="d-flex align-items-center">
+                        <img src="assets/media/favicon.png" alt="/logo" class="header-logo">
+                    </a>
+                    <div class="menu-button-right">
+                        <div class="main-menu__nav">
+                            <ul class="main-menu__list">
+                                <li>
+                                    <a href="index.html">Home</a>
+                                </li>
+
+                                <li>
+                                    <a href="about.html">About Us</a>
+                                </li>
+
+                                <li class="dropdown">
+                                    <a href="javascript:void(0); ">Catalogue</a>
+                                    <ul>
+                                        <li> <a href="cars.html">Cars</a></li>
+                                        <li> <a href="car-details.html">Cars Details</a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="dropdown">
+                                    
+                                    <ul>
+                                        
+                                        
+                                        
+                                        
+                                        <li><a href="car-details.html">Blog Detail</a></li>
+                                        <li><a href="booking.html">Booking Now</a></li>
+                                        <li><a href="404.html">404 Page</a></li>
+                                        <li><a href="faq's.html">Faq's</a></li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="contact.html">Contact Us</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="main-menu__right">
+                        <div class="search-heart-icon d-sm-flex d-none align-items-center gap-24">
+                            <a class="cus-btn" href="request-car.html">
+                                <span class="text">Request a Car</span>
+                                <span class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                                        fill="none">
+                                        <g clip-path="url(#clip0_11617_5921)">
+                                            <path
+                                                d="M19.8283 0.171647C19.6626 0.00586635 19.4139 -0.0451101 19.1964 0.041921L0.368279 7.57308C0.15285 7.65925 0.00859201 7.86441 0.000310775 8.09632C-0.0079314 8.32819 0.121443 8.54308 0.330193 8.64433L7.59869 12.1695C7.69975 12.2185 7.78136 12.3001 7.83038 12.4012L11.3556 19.6697C11.4538 19.8722 11.6588 19.9999 11.8826 19.9999C11.8896 19.9999 11.8966 19.9998 11.9036 19.9995C12.1354 19.9913 12.3406 19.847 12.4268 19.6316L19.958 0.803599C20.045 0.585943 19.9941 0.337389 19.8283 0.171647ZM3.05307 8.66246C2.66232 8.47294 2.68234 7.90963 3.08557 7.74834L14.7194 3.09485C15.2242 2.89292 15.6431 3.52817 15.2586 3.91264L8.32537 10.8459C8.17476 10.9965 7.94527 11.0351 7.75363 10.9422L3.05307 8.66246ZM12.2516 16.9143C12.0903 17.3176 11.5269 17.3376 11.3374 16.9468L9.05767 12.2462C8.96473 12.0545 9.00339 11.8251 9.154 11.6744L16.0873 4.7412C16.4718 4.35673 17.1071 4.77562 16.9051 5.28045L12.2516 16.9143Z"
+                                                fill="#FAB637" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_11617_5921">
+                                                <rect width="20" height="20" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                </span>
+                            </a>
+
+                        </div>
+                        
+                        <a href="" class="d-xl-none d-flex main-menu__toggler mobile-nav__toggler">
+                            <img src="assets/media/icons/menu-2.png" alt="">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- PAGE HERO -->
+        <section class="hero-inner" style="background:linear-gradient(135deg,#0a0a0a 0%,#1a1a2e 100%);padding:60px 0 40px;">
+            <div class="container-fluid">
+                <div class="text-center text-white">
+                    <p style="color:#f5a623;letter-spacing:2px;font-size:13px;text-transform:uppercase;font-weight:600;">Purchase Inquiry</p>
+                    <h2 class="white" style="font-size:2.2rem;font-weight:700;">Book Your Car</h2>
+                    <p style="color:rgba(255,255,255,0.6);margin-top:8px;">Fill in your details and our team will reach out within 24 hours.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOKING SECTION -->
+        <section style="padding:80px 0;background:#f8f9fa;">
+            <div class="container">
+                <div class="row g-5 justify-content-center">
+
+                    <!-- Car Summary Card -->
+                    <div class="col-lg-4">
+                        <div id="car-summary-card" style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 4px 24px rgba(0,0,0,0.09);position:sticky;top:100px;">
+                            <div id="car-loading" class="text-center py-4 text-muted">
+                                <div class="spinner-border text-warning mb-3" role="status"></div>
+                                <p class="mb-0">Loading car details...</p>
+                            </div>
+                            <div id="car-info" style="display:none;">
+                                <img id="car-img" src="" alt="" style="width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:16px;" onerror="this.src='assets/media/blog/blog-1.jpg'">
+                                <span id="car-badge-tag" class="badge mb-2" style="background:#f5a623;color:#fff;font-size:12px;display:none;"></span>
+                                <h5 id="car-title" style="font-weight:700;margin-bottom:6px;color:#1a1a2e;"></h5>
+                                <p id="car-meta" style="color:#6b7280;font-size:13px;margin-bottom:16px;"></p>
+                                <div style="background:#f8f9fa;border-radius:10px;padding:14px;margin-bottom:16px;">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span style="font-size:13px;color:#6b7280;">Price</span>
+                                        <strong id="car-price-tag" style="color:#f5a623;font-size:1.1rem;"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span style="font-size:13px;color:#6b7280;">Year</span>
+                                        <span id="car-year-tag" style="font-size:13px;font-weight:600;"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span style="font-size:13px;color:#6b7280;">Fuel</span>
+                                        <span id="car-fuel-tag" style="font-size:13px;font-weight:600;"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span style="font-size:13px;color:#6b7280;">Transmission</span>
+                                        <span id="car-trans-tag" style="font-size:13px;font-weight:600;"></span>
+                                    </div>
+                                </div>
+                                <a id="car-detail-link" href="#" style="display:block;text-align:center;font-size:13px;color:#6b7280;text-decoration:underline;">← Back to car details</a>
+                            </div>
+                            <div id="no-car-msg" style="display:none;" class="text-center py-3">
+                                <i class="fa-solid fa-car fa-2x text-muted mb-3"></i>
+                                <p class="text-muted mb-2">No car selected.</p>
+                                <a href="cars.html" class="btn btn-warning btn-sm">Browse Cars</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Inquiry Form -->
+                    <div class="col-lg-7">
+                        <div style="background:#fff;border-radius:16px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.09);">
+                            <h4 style="font-weight:700;color:#1a1a2e;margin-bottom:6px;">Your Details</h4>
+                            <p style="color:#6b7280;font-size:14px;margin-bottom:28px;">Please fill in all required fields. Our team will contact you shortly.</p>
+
+                            <div id="booking-success" style="display:none;background:#d1fae5;border:1px solid #34d399;border-radius:10px;padding:20px;text-align:center;margin-bottom:24px;">
+                                <i class="fa-solid fa-circle-check fa-2x" style="color:#059669;margin-bottom:10px;display:block;"></i>
+                                <h5 style="color:#065f46;font-weight:700;">Inquiry Sent Successfully!</h5>
+                                <p style="color:#047857;margin-bottom:14px;">We've received your request and will contact you within 24 hours.</p>
+                                <a href="cars.html" class="btn btn-sm" style="background:#059669;color:#fff;">Browse More Cars</a>
+                            </div>
+
+                            <form id="booking-form" novalidate>
+                                <!-- Hidden car fields -->
+                                <input type="hidden" id="field-car-id">
+                                <input type="hidden" id="field-car-name">
+                                <input type="hidden" id="field-car-price">
+
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">First Name <span class="text-danger">*</span></label>
+                                        <input type="text" id="field-fname" class="form-control" placeholder="John" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">Last Name <span class="text-danger">*</span></label>
+                                        <input type="text" id="field-lname" class="form-control" placeholder="Doe" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">Email Address <span class="text-danger">*</span></label>
+                                        <input type="email" id="field-email" class="form-control" placeholder="john@example.com" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">Phone Number <span class="text-danger">*</span></label>
+                                        <input type="tel" id="field-phone" class="form-control" placeholder="+1 555 000 0000" required>
+                                    </div>
+
+                                    <!-- Car (auto-filled, read-only) -->
+                                    <div class="col-sm-8">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">Car of Interest</label>
+                                        <input type="text" id="field-car-display" class="form-control" placeholder="Select a car from the listing" readonly style="background:#f8f9fa;">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">Listed Price</label>
+                                        <input type="text" id="field-price-display" class="form-control" readonly style="background:#f8f9fa;color:#f5a623;font-weight:700;">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold" style="font-size:13px;">Message / Questions</label>
+                                        <textarea id="field-message" class="form-control" rows="4" placeholder="E.g. I am interested in this car. Can we arrange a viewing or test drive?"></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="field-agree" required>
+                                            <label class="form-check-label" style="font-size:13px;color:#6b7280;" for="field-agree">
+                                                I agree to be contacted by the CarVoyage team regarding this inquiry. <span class="text-danger">*</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-2">
+                                        <button type="submit" id="booking-submit-btn" class="cus-btn w-100" style="padding:14px;font-size:1rem;justify-content:center;">
+                                            <span id="btn-text">Send Inquiry</span>
+                                            <span id="btn-spinner" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Trust signals -->
+                        <div class="row g-3 mt-3">
+                            <div class="col-4 text-center">
+                                <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                                    <i class="fa-solid fa-shield-halved fa-lg" style="color:#f5a623;margin-bottom:8px;display:block;"></i>
+                                    <p style="font-size:11px;color:#6b7280;margin:0;font-weight:600;">Secure Process</p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                                    <i class="fa-solid fa-headset fa-lg" style="color:#f5a623;margin-bottom:8px;display:block;"></i>
+                                    <p style="font-size:11px;color:#6b7280;margin:0;font-weight:600;">24hr Response</p>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                                    <i class="fa-solid fa-handshake fa-lg" style="color:#f5a623;margin-bottom:8px;display:block;"></i>
+                                    <p style="font-size:11px;color:#6b7280;margin:0;font-weight:600;">No Hidden Fees</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="">
+                <div class="footer-wrapper">
+                    <div class="footer-sec-1">
+                        <div class="mb-96">
+                            <img class="mb-24" src="assets/media/favicon.png" alt="">
+                            <p class="fw-600 lightest-gray mb-48">The first free end-to-end analytics service for the
+                                site,<br>
+                                designed to
+                                work with enterprises.</p>
+                            <a href="contact.html" class="cus-btn-2">Learn More</a>
+                        </div>
+                        <div>
+                            <p class="color-primary fw-600 mb-16">News Letter</p>
+                            <form action="index.html" method="post">
+                                <div class="newsletter">
+                                    <input type="email" id="newsletter" class="form-control newsletter-form"
+                                        placeholder="Your Email ID">
+                                    <button type="submit" class="border-0 rounded-0 cus-btn-2">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="footer-sec-2">
+                        <div class="content-info">
+                            <div class="addresse">
+                                <p class="fw-600 color-primary mb-24">Address</p>
+                                <p class="white mb-24">24, Main Road Mississippi<br>
+                                    United States - 24185 15 </p>
+                                <p class="white">65, Main Boulevard Tennesi<br>
+                                    United States - 25491 28 </p>
+                            </div>
+                            <div class="contect-number">
+                                <div>
+                                    <p class="fw-600 color-primary mb-16">Contact</p>
+                                </div>
+                                <div>
+                                    <a href="tel:+13232751718" class="hover-content white">+1 (323) 275-1718</a><br>
+                                    <a href="mailto:hello@logoipsum.com"
+                                        class="hover-content white">hello@logoipsum.com</a>
+                                </div>
+                            </div>
+                            <div class="footer-social-icon">
+                                <div>
+                                    <p class="color-primary mb-16 fw-600">Follow us</p>
+                                </div>
+                                <div class="links">
+                                    <a href="" class="menu-link-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                            viewBox="0 0 20 21" fill="none">
+                                            <path
+                                                d="M10 2.28574C12.6506 2.28574 13.0121 2.28574 14.0964 2.28574C15.0602 2.28574 15.5422 2.52671 15.9036 2.64719C16.3855 2.88815 16.747 3.00864 17.1084 3.37008C17.4699 3.73153 17.7108 4.09297 17.8313 4.5749C17.9518 4.93635 18.0723 5.41828 18.1928 6.38213C18.1928 7.46647 18.1928 7.70743 18.1928 10.4785C18.1928 13.2496 18.1928 13.4906 18.1928 14.5749C18.1928 15.5388 17.9518 16.0207 17.8313 16.3821C17.5904 16.8641 17.4699 17.2255 17.1084 17.587C16.747 17.9484 16.3855 18.1894 15.9036 18.3098C15.5422 18.4303 15.0602 18.5508 14.0964 18.6713C13.0121 18.6713 12.7711 18.6713 10 18.6713C7.22892 18.6713 6.98795 18.6713 5.90362 18.6713C4.93976 18.6713 4.45783 18.4303 4.09639 18.3098C3.61446 18.0689 3.25301 17.9484 2.89157 17.587C2.53012 17.2255 2.28916 16.8641 2.16868 16.3821C2.04819 16.0207 1.92771 15.5388 1.80723 14.5749C1.80723 13.4906 1.80723 13.2496 1.80723 10.4785C1.80723 7.70743 1.80723 7.46647 1.80723 6.38213C1.80723 5.41828 2.04819 4.93635 2.16868 4.5749C2.40964 4.09297 2.53012 3.73153 2.89157 3.37008C3.25301 3.00864 3.61446 2.76767 4.09639 2.64719C4.45783 2.52671 4.93976 2.40623 5.90362 2.28574C6.98795 2.28574 7.3494 2.28574 10 2.28574ZM10 0.478516C7.22892 0.478516 6.98795 0.478516 5.90362 0.478516C4.81928 0.478516 4.09639 0.71948 3.49398 0.960444C2.89157 1.20141 2.28916 1.56285 1.68675 2.16526C1.08434 2.76767 0.843374 3.2496 0.481928 3.97249C0.240965 4.5749 0.120482 5.29779 0 6.38213C0 7.46647 0 7.82791 0 10.4785C0 13.2496 0 13.4906 0 14.5749C0 15.6592 0.240965 16.3821 0.481928 16.9845C0.722892 17.587 1.08434 18.1894 1.68675 18.7918C2.28916 19.3942 2.77109 19.6351 3.49398 19.9966C4.09639 20.2376 4.81928 20.358 5.90362 20.4785C6.98795 20.4785 7.3494 20.4785 10 20.4785C12.6506 20.4785 13.0121 20.4785 14.0964 20.4785C15.1807 20.4785 15.9036 20.2376 16.506 19.9966C17.1084 19.7556 17.7108 19.3942 18.3133 18.7918C18.9157 18.1894 19.1566 17.7074 19.5181 16.9845C19.759 16.3821 19.8795 15.6592 20 14.5749C20 13.4906 20 13.1291 20 10.4785C20 7.82791 20 7.46647 20 6.38213C20 5.29779 19.759 4.5749 19.5181 3.97249C19.2771 3.37008 18.9157 2.76767 18.3133 2.16526C17.7108 1.56285 17.2289 1.32189 16.506 0.960444C15.9036 0.71948 15.1807 0.598998 14.0964 0.478516C13.0121 0.478516 12.7711 0.478516 10 0.478516Z"
+                                                fill="#EAEAEC" />
+                                            <path
+                                                d="M10 5.29779C7.10843 5.29779 4.81928 7.58695 4.81928 10.4785C4.81928 13.3701 7.10843 15.6592 10 15.6592C12.8916 15.6592 15.1807 13.3701 15.1807 10.4785C15.1807 7.58695 12.8916 5.29779 10 5.29779ZM10 13.852C8.19277 13.852 6.62651 12.4062 6.62651 10.4785C6.62651 8.67129 8.07229 7.10502 10 7.10502C11.8072 7.10502 13.3735 8.55081 13.3735 10.4785C13.3735 12.2857 11.8072 13.852 10 13.852Z"
+                                                fill="#EAEAEC" />
+                                            <path
+                                                d="M15.3012 6.38213C15.9666 6.38213 16.506 5.84272 16.506 5.17731C16.506 4.51191 15.9666 3.97249 15.3012 3.97249C14.6358 3.97249 14.0964 4.51191 14.0964 5.17731C14.0964 5.84272 14.6358 6.38213 15.3012 6.38213Z"
+                                                fill="#EAEAEC" />
+                                        </svg>
+                                    </a>
+                                    <a href="" class="menu-link-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                            viewBox="0 0 20 21" fill="none">
+                                            <g clip-path="url(#clip0_11680_3829)">
+                                                <path
+                                                    d="M11.8683 8.94715L19.1537 0.478516H17.4273L11.1014 7.83171L6.04897 0.478516H0.221558L7.86186 11.5979L0.221558 20.4785H1.94805L8.62833 12.7133L13.9641 20.4785H19.7915L11.8679 8.94715H11.8683ZM9.50367 11.6958L8.72954 10.5886L2.57013 1.77819H5.22192L10.1926 8.88846L10.9668 9.99569L17.4281 19.2379H14.7763L9.50367 11.6962V11.6958Z"
+                                                    fill="#FAFAFA" />
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_11680_3829">
+                                                    <rect width="20" height="20" fill="white"
+                                                        transform="translate(0 0.478516)" />
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </a>
+                                    <a href="" class="menu-link-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21"
+                                            viewBox="0 0 20 21" fill="none">
+                                            <g clip-path="url(#clip0_11680_3832)">
+                                                <path
+                                                    d="M14.6875 5.16602C15.0109 5.16602 15.2734 4.90352 15.2734 4.58008V1.06445C15.2734 0.741016 15.0109 0.478516 14.6875 0.478516H11.1719C8.91016 0.478516 7.07031 2.31836 7.07031 4.58008V7.50977H5.3125C4.98906 7.50977 4.72656 7.77227 4.72656 8.0957V11.6113C4.72656 11.9348 4.98906 12.1973 5.3125 12.1973H7.07031V19.8926C7.07031 20.216 7.33281 20.4785 7.65625 20.4785H11.1719C11.4953 20.4785 11.7578 20.216 11.7578 19.8926V12.1973H14.1016C14.3879 12.1973 14.6324 11.9902 14.6797 11.7078L15.2656 8.19219C15.2938 8.02227 15.2461 7.84844 15.1348 7.7168C15.0234 7.58555 14.8598 7.50977 14.6875 7.50977H11.7578V5.16602H14.6875ZM11.1719 8.68164H13.9957L13.6051 11.0254H11.1719C10.8484 11.0254 10.5859 11.2879 10.5859 11.6113V19.3066H8.24219V11.6113C8.24219 11.2879 7.97969 11.0254 7.65625 11.0254H5.89844V8.68164H7.65625C7.97969 8.68164 8.24219 8.41914 8.24219 8.0957V4.58008C8.24219 2.96484 9.55664 1.65039 11.1719 1.65039H14.1016V3.99414H11.1719C10.8484 3.99414 10.5859 4.25664 10.5859 4.58008V8.0957C10.5859 8.41914 10.8484 8.68164 11.1719 8.68164Z"
+                                                    fill="#FAFAFA" />
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_11680_3832">
+                                                    <rect width="20" height="20" fill="white"
+                                                        transform="translate(0 0.478516)" />
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </a>
+                                    <a href="" class="menu-link-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21"
+                                            viewBox="0 0 21 21" fill="none">
+                                            <path
+                                                d="M1.4149 9.08847C6.7836 6.26603 10.3636 4.4053 12.1548 3.50629C17.2692 0.939429 18.3319 0.493539 19.0246 0.478658C19.1769 0.475577 19.5176 0.521135 19.7382 0.737176C19.9245 0.919597 19.9758 1.16602 20.0003 1.33898C20.0249 1.51193 20.0554 1.90593 20.0311 2.21379C19.754 5.72762 18.5547 14.2548 17.9446 18.1903C17.6865 19.8556 17.1782 20.414 16.6861 20.4686C15.6166 20.5874 14.8045 19.6158 13.7687 18.7964C12.1478 17.5144 11.2321 16.7163 9.65879 15.4652C7.84054 14.0194 9.01924 13.2247 10.0555 11.9261C10.3266 11.5862 15.0387 6.41446 15.1299 5.9453C15.1413 5.88663 15.1519 5.66791 15.0442 5.55242C14.9366 5.43693 14.7776 5.47642 14.6629 5.50783C14.5004 5.55235 11.911 7.61751 6.89487 11.7033C6.15989 12.3123 5.49417 12.609 4.89771 12.5935C4.24015 12.5763 2.97528 12.1448 2.03498 11.776C0.881668 11.3236 -0.0349644 11.0845 0.0448537 10.3162C0.0864279 9.91604 0.543112 9.50679 1.4149 9.08847Z"
+                                                fill="#EAEAEC" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="subtitle fw-400 lightest-gray">� 2026 � Copyright</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+
+        <!-- Main Wrapper End -->
+    </div>
+    <!-- Back To Top Start -->
+    <button class="scrollToTopBtn"><i class="fa-solid fa-arrow-up"></i></button>
+
+
+    <!-- Mobile Menu Start -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa-solid fa-times"></i></span>
+            <div class="logo-box">
+                <a href="index.html" aria-label="logo image"><img src="assets/media/favicon.png" alt=""></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:example@company.com">example@company.com</a>
+                </li>
+                <li>
+                    <i class="fa-solid fa-phone"></i>
+                    <a href="tel:+12345678">+123 (4567) -890</a>
+                </li>
+            </ul>
+            <div class="mobile-nav__social">
+                <a href=""><i class="fa-brands fa-x-twitter"></i></a>
+                <a href=""><i class="fa-brands fa-facebook-f"></i></a>
+                <a href=""><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu End -->
+
+    <!-- Jquery Js -->
+    <script src="assets/js/vendor/bootstrap.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.3.min.js"></script>
+    <script src="assets/js/vendor/slick.min.js"></script>
+    <script src="assets/js/vendor/jquery-validator.js"></script>
+    <script src="assets/js/vendor/wizard.js"></script>
+    <script src="assets/js/vendor/autoComplete.js"></script>
+    <script src="assets/js/vendor/jquery.smartWizard.min.js"></script>
+
+    <script src="assets/js/app.js"></script>
+
+
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      const form = document.querySelector('form');
+      const params = new URLSearchParams(window.location.search);
+      const carId = params.get('id');
+      let carData = null;
+      }
+      
+      if (form) {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const btn = form.querySelector('button[type="submit"]') || form.querySelector('button');
+          const originalText = btn ? btn.innerHTML : '';
+          if(btn) { btn.innerHTML = 'Sending...'; btn.disabled = true; }
+          
+          const nameInputs = form.querySelectorAll('input[type="text"]');
+          const emailInputs = form.querySelectorAll('input[type="email"]');
+          const phoneInputs = form.querySelectorAll('input[type="tel"]');
+          const textarea = form.querySelector('textarea');
+          
+          const name = nameInputs.length > 0 ? nameInputs[0].value : 'Unknown';
+          const email = emailInputs.length > 0 ? emailInputs[0].value : '';
+          const phone = phoneInputs.length > 0 ? phoneInputs[0].value : '';
+          let message = textarea ? textarea.value : 'Booking Inquiry';
+          
+          if (carData) {
+            message = 'Inquiry for ' + carData.name + ':\n' + message;
+          }
+          
+            carId: carData ? carData.id : null,
+            carName: carData ? carData.name : null,
+            totalPrice: carData ? carData.price : null,
+            customerName: name,
+            email: email,
+            phone: phone,
+            message: message,
+            status: 'New'
+          });
+          
+          alert('Thank you! Your inquiry has been sent. Our team will reach out to you shortly to discuss details.');
+          form.reset();
+          if(btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
+
+    <script src="assets/js/config.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="assets/js/data.js"></script>
+        <script>
+            (async function() {
+                var params  = new URLSearchParams(window.location.search);
+                var carId   = params.get('id');
+                var carData = null;
+
+                var loadingEl  = document.getElementById('car-loading');
+                var infoEl     = document.getElementById('car-info');
+                var noCarEl    = document.getElementById('no-car-msg');
+
+                if (carId) {
+                    try { carData = await CarStore.getById(parseInt(carId)); } catch(e) {}
+                }
+
+                if (carData) {
+                    document.getElementById('car-img').src        = carData.thumbnail || 'assets/media/blog/blog-1.jpg';
+                    document.getElementById('car-title').textContent = carData.name;
+                    document.getElementById('car-meta').textContent  = (carData.category||'') + ' · ' + (carData.year||'') + ' · ' + (carData.condition||'');
+                    document.getElementById('car-price-tag').textContent = '$' + (carData.price||0).toLocaleString();
+                    document.getElementById('car-year-tag').textContent  = carData.year || '—';
+                    document.getElementById('car-fuel-tag').textContent  = carData.fuel || '—';
+                    document.getElementById('car-trans-tag').textContent = carData.transmission || '—';
+                    document.getElementById('car-detail-link').href = 'car-details.html?id=' + carData.id;
+                    if (carData.badge) {
+                        var tag = document.getElementById('car-badge-tag');
+                        tag.textContent = carData.badge;
+                        tag.style.display = 'inline-block';
+                    }
+                    // Fill hidden + display fields
+                    document.getElementById('field-car-id').value       = carData.id;
+                    document.getElementById('field-car-name').value     = carData.name;
+                    document.getElementById('field-car-price').value    = carData.price;
+                    document.getElementById('field-car-display').value  = carData.name;
+                    document.getElementById('field-price-display').value = '$' + (carData.price||0).toLocaleString();
+                    // Page title
+                    document.title = 'Book ' + carData.name + ' — CarVoyage';
+                    loadingEl.style.display = 'none'; infoEl.style.display = 'block';
+                } else {
+                    loadingEl.style.display = 'none'; noCarEl.style.display = 'block';
+                }
+
+                // Form submit
+                document.getElementById('booking-form').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    var agree = document.getElementById('field-agree').checked;
+                    if (!agree) { alert('Please agree to be contacted before submitting.'); return; }
+                    var fname   = document.getElementById('field-fname').value.trim();
+                    var lname   = document.getElementById('field-lname').value.trim();
+                    var email   = document.getElementById('field-email').value.trim();
+                    var phone   = document.getElementById('field-phone').value.trim();
+                    var message = document.getElementById('field-message').value.trim();
+                    if (!fname || !email || !phone) { alert('Please fill in all required fields.'); return; }
+
+                    var btn = document.getElementById('booking-submit-btn');
+                    var txt = document.getElementById('btn-text');
+                    var spin = document.getElementById('btn-spinner');
+                    btn.disabled = true; txt.textContent = 'Sending...'; spin.classList.remove('d-none');
+
+                    try {
+                        var result = await OrderStore.submit({
+                            car_id:        document.getElementById('field-car-id').value || null,
+                            car_name:      document.getElementById('field-car-name').value || 'General Inquiry',
+                            customer_name: fname + ' ' + lname,
+                            email:         email,
+                            phone:         phone,
+                            message:       message || 'I am interested in purchasing this car.',
+                            total_price:   parseFloat(document.getElementById('field-car-price').value) || 0,
+                            status:        'New'
+                        });
+                        if (result) {
+                            document.getElementById('booking-form').style.display = 'none';
+                            document.getElementById('booking-success').style.display = 'block';
+                        } else {
+                            alert('Something went wrong. Please try again or contact us directly.');
+                        }
+                    } catch(err) {
+                        alert('Error submitting inquiry: ' + (err.message || 'Unknown error'));
+                    } finally {
+                        btn.disabled = false; txt.textContent = 'Send Inquiry'; spin.classList.add('d-none');
+                    }
+                });
+            })();
+        </script>
+</body>
+</html>

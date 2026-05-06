@@ -1,0 +1,152 @@
+.blog-sec {
+    .nav {
+        border-bottom: none;
+        border: none;
+        align-items: center;
+    }
+
+    .nav-cotent {
+        border: none;
+        display: flex;
+        align-items: center;
+        border-bottom: none !important;
+
+        .nav-line {
+            width: 2px;
+            height: 28px;
+            background-color: $dark-gray;
+        }
+
+        .nav-link {
+            border: none;
+            color: $dark-gray;
+            background-color: transparent;
+
+            &:hover {
+                cursor: pointer;
+                border: none;
+                color: $accent-1;
+            }
+        }
+
+        .active {
+            border: none;
+            color: $accent-1;
+        }
+
+    }
+
+    .nav-2 {
+        gap: $gap-12;
+
+        .button-1 {
+            background-color: $accent-1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 48px;
+            padding: 20px;
+        }
+
+        .button-2 {
+            background-color: transparent;
+            border: 1px solid $accent-1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: $gap-12;
+            border-radius: 48px;
+            padding: 20px;
+            transition: $transition;
+
+            &:hover {
+                border: 1px solid $accent-1;
+                transition: $transition;
+                background-color: $accent-1;
+
+                svg {
+                    path {
+                        transition: $transition;
+                        stroke: $white;
+                    }
+                }
+            }
+        }
+    }
+
+    .blog-1 {
+        overflow: hidden;
+        border-radius: $br-12 !important;
+        background-color: $white;
+        box-shadow: 0px 321px 90px 0px rgba(0, 0, 0, 0.00), 0px 205px 82px 0px rgba(0, 0, 0, 0.01), 0px 116px 69px 0px rgba(0, 0, 0, 0.05), 0px 51px 51px 0px rgba(0, 0, 0, 0.09), 0px 13px 28px 0px rgba(0, 0, 0, 0.10);
+
+        .blog-img {
+            overflow: hidden;
+
+            img {
+                transition: $transition;
+                border-radius: $br-12 $br-12 0 0;
+                overflow: hidden;
+
+                &:hover {
+                    transform: scale(1.1);
+                    transition: $transition;
+                }
+            }
+        }
+
+        .blog-content {
+            border-radius: $br-12 !important;
+            background-color: $white;
+            padding: clamp(12px, 0.833vw, 32px) clamp(18px, 1.25vw, 48px);
+        }
+    }
+}
+
+.hover-content {
+    transition: $transition;
+
+    &:hover {
+        transition: $transition;
+        color: $accent-1 !important;
+    }
+}
+
+.car-blog-update {
+    .update-blog {
+        overflow: hidden;
+        border-radius: $br-12 !important;
+        background-color: $white;
+        box-shadow: 0px 321px 90px 0px rgba(0, 0, 0, 0.00), 0px 205px 82px 0px rgba(0, 0, 0, 0.01), 0px 116px 69px 0px rgba(0, 0, 0, 0.05), 0px 51px 51px 0px rgba(0, 0, 0, 0.09), 0px 13px 28px 0px rgba(0, 0, 0, 0.10);
+
+        .blog-img {
+            overflow: hidden;
+
+            img {
+                transition: $transition;
+                border-radius: $br-12 $br-12 0 0;
+                overflow: hidden;
+
+                &:hover {
+                    transform: scale(1.1);
+                    transition: $transition;
+                }
+            }
+        }
+
+        .blog-content {
+            border-radius: $br-12 !important;
+            background-color: $white;
+            padding: clamp(12px, 0.833vw, 32px) clamp(18px, 1.25vw, 48px);
+
+            p {
+                @include media-query(1340px) {
+                    br {
+                        display: none;
+                    }
+                }
+
+            }
+        }
+    }
+}

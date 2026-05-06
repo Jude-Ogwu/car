@@ -1,0 +1,563 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Cars — Vehicle Dealers Hub Admin</title>
+    <link rel="shortcut icon" href="../assets/media/favicon.png">
+    <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .img-preview { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; border: 2px dashed #e3e6ea; display: none; margin-top: 8px; }
+        .img-preview.visible { display: block; }
+        .upload-tabs .nav-link { font-size: 13px; padding: 6px 14px; }
+        .status-draft { background: #6b7280 !important; }
+        .status-published { background: #059669 !important; }
+        .car-status-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    </style>
+</head>
+<body class="admin-body">
+<div class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand"><img src="../assets/media/favicon.png" alt="Vehicle Dealers Hub" class="sidebar-logo"><span class="sidebar-label">Admin</span><button class="sidebar-close-btn" id="sidebar-close" title="Close menu"><i class="fa-solid fa-xmark"></i></button></div>
+    <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></a>
+        <a href="cars.html" class="nav-item active"><i class="fa-solid fa-car"></i><span>Manage Cars</span></a>
+        <a href="orders.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i><span>Orders &amp; Inquiries</span></a>
+        <hr class="sidebar-divider">
+        <a href="../index.html" class="nav-item" target="_blank"><i class="fa-solid fa-globe"></i><span>View Website</span></a>
+        <a href="#" class="nav-item" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+</div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="admin-main">
+    <header class="admin-topbar">
+        <button class="sidebar-toggle" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="topbar-title"><h5>Manage Cars</h5></div>
+        <div class="topbar-right">
+            <button class="btn btn-primary btn-sm" id="btn-add-car"><i class="fa-solid fa-plus me-2"></i>Add New Car</button>
+        </div>
+    </header>
+
+    <div class="admin-content">
+        <div class="admin-card mb-4">
+            <div class="d-flex gap-3 align-items-center p-3 flex-wrap">
+                <input type="text" id="car-search" class="form-control" style="max-width:280px;" placeholder="Search cars...">
+                <select id="filter-status" class="form-select" style="max-width:160px;">
+                    <option value="">All Status</option>
+                    <option value="Available">Available</option>
+                    <option value="Sold">Sold</option>
+                    <option value="Draft">Draft</option>
+                </select>
+                <span id="car-count" class="text-muted ms-auto"></span>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="table-responsive">
+                <table class="table admin-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Photo</th><th>Car Name</th><th>Category</th>
+                            <th>Year</th><th>Price</th><th>Fuel</th><th>Status</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cars-tbody">
+                        <tr><td colspan="8" class="text-center py-4 text-muted">Loading inventory...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Car Modal -->
+<div class="modal fade" id="carModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content admin-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Add New Car</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="car-form">
+                <div class="modal-body">
+                    <input type="hidden" id="car-id">
+                    <div class="row g-3">
+
+                        <!-- Basic Info -->
+                        <div class="col-md-8">
+                            <label class="form-label fw-600">Car Name *</label>
+                            <input type="text" id="car-name" class="form-control" placeholder="e.g. 2024 Tesla Model 3" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Brand *</label>
+                            <input type="text" id="car-brand" class="form-control" placeholder="e.g. Tesla" required>
+                        </div>
+
+                        <!-- Category with custom option -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Category *</label>
+                            <select id="car-category" class="form-select" onchange="handleCategoryChange(this)">
+                                <option value="">Loading categories...</option>
+                            </select>
+                            <input type="text" id="car-category-custom" class="form-control mt-2 d-none" placeholder="Type new category name...">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Year *</label>
+                            <input type="number" id="car-year" class="form-control" min="1990" max="2030" placeholder="2024" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Sale Price (USD) *</label>
+                            <input type="number" id="car-price" class="form-control" placeholder="35000" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Mileage (km)</label>
+                            <input type="number" id="car-mileage" class="form-control" placeholder="15000">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Fuel Type *</label>
+                            <select id="car-fuel" class="form-select" required>
+                                <option value="">Select...</option>
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Electric">Electric</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Transmission</label>
+                            <select id="car-transmission" class="form-select">
+                                <option value="Automatic">Automatic</option>
+                                <option value="Manual">Manual</option>
+                                <option value="eCVT">eCVT</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-600">Condition</label>
+                            <select id="car-condition" class="form-select">
+                                <option value="New">New</option>
+                                <option value="Used">Used</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Engine</label>
+                            <input type="text" id="car-engine" class="form-control" placeholder="e.g. 2.0L Turbo I4">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-600">Horsepower</label>
+                            <input type="number" id="car-hp" class="form-control" placeholder="200">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-600">Color</label>
+                            <input type="text" id="car-color" class="form-control" placeholder="Pearl White">
+                        </div>
+
+                        <!-- Image Upload Section -->
+                        <div class="col-12">
+                            <label class="form-label fw-600">Thumbnail Image</label>
+                            <ul class="nav nav-tabs upload-tabs mb-2" id="imgTabs">
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link active" onclick="switchImgTab('url')"><i class="fa-solid fa-link me-1"></i>Paste URL</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link" onclick="switchImgTab('upload')"><i class="fa-solid fa-upload me-1"></i>Upload File</button>
+                                </li>
+                            </ul>
+                            <div id="img-tab-url">
+                                <input type="text" id="car-thumbnail" class="form-control" placeholder="https://... or assets/media/cars/img-1.jpg" oninput="previewFromUrl(this.value)">
+                            </div>
+                            <div id="img-tab-upload" class="d-none">
+                                <input type="file" id="car-thumbnail-file" class="form-control" accept="image/*" onchange="handleFileUpload(this)">
+                                <small class="text-muted">JPG, PNG, WebP supported. Max 2MB.</small>
+                            </div>
+                            <img id="img-preview" class="img-preview" alt="Preview">
+                        </div>
+
+                        <!-- Gallery Images -->
+                        <div class="col-12">
+                            <label class="form-label fw-600">Gallery Images <small class="text-muted fw-normal">(optional — up to 4 extra photos for product detail)</small></label>
+                            <div id="gallery-inputs">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 1 — https://... or assets/media/cars/img.jpg">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 2 (optional)">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 3 (optional)">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fa-solid fa-image"></i></span>
+                                    <input type="text" class="form-control gallery-url" placeholder="Image URL 4 (optional)">
+                                </div>
+                            </div>
+                            <small class="text-muted">These images appear in the car detail page gallery. The Thumbnail above is the main listing image.</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-600">Description</label>
+                            <textarea id="car-description" class="form-control" rows="3" placeholder="Car description..."></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Badge (optional)</label>
+                            <select id="car-badge" class="form-select">
+                                <option value="">None</option>
+                                <option value="Hot Deal">Hot Deal</option>
+                                <option value="Popular">Popular</option>
+                                <option value="Best Value">Best Value</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="New Arrival">New Arrival</option>
+                                <option value="Editor's Choice">Editor's Choice</option>
+                            </select>
+                        </div>
+
+                        <!-- Publish Status -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Catalogue Status</label>
+                            <select id="car-status" class="form-select">
+                                <option value="Available">✅ Published (Available)</option>
+                                <option value="Sold">🔴 Sold</option>
+                                <option value="Draft">📝 Draft (Hidden from site)</option>
+                            </select>
+                            <small class="text-muted">Draft = saved but not shown on the public website.</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary" id="save-draft-btn"><i class="fa-solid fa-floppy-disk me-1"></i>Save as Draft</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn"><i class="fa-solid fa-globe me-1"></i>Publish Car</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/js/vendor/bootstrap.min.js"></script>
+<script src="../assets/js/vendor/jquery-3.6.3.min.js"></script>
+    <script src="../assets/js/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/data.js"></script>
+<script>
+    AdminAuth.requireAuth();
+
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebar-overlay');
+
+    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
+
+    document.getElementById('sidebar-toggle').addEventListener('click', function() {
+        if (window.innerWidth <= 768) { sidebar.classList.toggle('mobile-open'); overlay.classList.toggle('active'); }
+        else { sidebar.classList.toggle('collapsed'); }
+    });
+    document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault(); AdminAuth.logout(); window.location.href = 'login.html';
+    });
+
+    var modal = new bootstrap.Modal(document.getElementById('carModal'));
+    var editingId = null;
+    var uploadedImageData = null; // stores base64 data URL from file upload
+
+    // ── Category dropdown: load from DB ──────────────────────────────────────
+    async function loadCategories() {
+        var DEFAULTS = ['Sedan','SUV','Coupe','Wagon','Sports','Truck','Van','Hatchback','Convertible','Electric','Hybrid','Luxury'];
+        var cats = [];
+        try { cats = await CategoryStore.getAll(); } catch(e) {}
+        // Fallback to hardcoded list if DB returns nothing
+        if (!cats || !cats.length) {
+            cats = DEFAULTS.map(function(n, i) { return { id: i+1, name: n }; });
+        }
+        var sel = document.getElementById('car-category');
+        var current = sel.value;
+        sel.innerHTML = '<option value="">Select category...</option>' +
+            cats.map(function(c) {
+                return '<option value="' + c.name + '">' + c.name + '</option>';
+            }).join('') +
+            '<option value="__custom__">&#43; Manage Categories</option>';
+        if (current) sel.value = current;
+    }
+
+    // ── Category custom-input toggle ──────────────────────────────────────────
+    function handleCategoryChange(sel) {
+        if (sel.value === '__custom__') {
+            if (confirm('To add or remove categories, go to the Categories management page?')) {
+                window.open('categories.html', '_blank');
+            }
+            sel.value = '';
+        }
+    }
+
+    // ── Image tab switching ────────────────────────────────────
+    function switchImgTab(tab) {
+        document.getElementById('img-tab-url').classList.toggle('d-none', tab !== 'url');
+        document.getElementById('img-tab-upload').classList.toggle('d-none', tab !== 'upload');
+        document.querySelectorAll('.upload-tabs .nav-link').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        if (tab === 'url') uploadedImageData = null;
+    }
+
+    function previewFromUrl(url) {
+        var preview = document.getElementById('img-preview');
+        if (url) {
+            preview.src = url;
+            preview.classList.add('visible');
+        } else {
+            preview.classList.remove('visible');
+        }
+    }
+
+    function handleFileUpload(input) {
+        var file = input.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+            alert('File is too large. Maximum size is 2MB.');
+            input.value = '';
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            uploadedImageData = e.target.result;
+            var preview = document.getElementById('img-preview');
+            preview.src = uploadedImageData;
+            preview.classList.add('visible');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // ── Get final thumbnail value ──────────────────────────────
+    function getThumbnail() {
+        if (uploadedImageData) return uploadedImageData;
+        return document.getElementById('car-thumbnail').value || 'assets/media/blog/blog-1.jpg';
+    }
+
+    // ── Get final category value ───────────────────────────────
+    function getCategory() {
+        var sel = document.getElementById('car-category');
+        if (sel.value === '__custom__') {
+            return document.getElementById('car-category-custom').value.trim();
+        }
+        return sel.value;
+    }
+
+    // ── Render Cars Table ──────────────────────────────────────
+    async function renderCars() {
+        var search = document.getElementById('car-search').value.toLowerCase();
+        var status = document.getElementById('filter-status').value;
+        var cars = (await CarStore.getAll()).filter(function(c) {
+            if (status && c.status !== status) return false;
+            if (search && !(c.name||'').toLowerCase().includes(search) && !(c.brand||'').toLowerCase().includes(search)) return false;
+            return true;
+        });
+        document.getElementById('car-count').textContent = cars.length + ' car(s) found';
+        var tbody = document.getElementById('cars-tbody');
+        if (!cars.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">No cars found.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = cars.map(function(c) {
+            var statusColor = c.status === 'Sold' ? 'danger' : c.status === 'Draft' ? 'secondary' : 'success';
+            var statusBadge = '<span class="badge bg-' + statusColor + '">' + (c.status||'Available') + '</span>';
+            var thumb = c.thumbnail || 'assets/media/blog/blog-1.jpg';
+            return '<tr>' +
+                '<td><img src="../' + thumb + '" style="width:60px;height:45px;object-fit:cover;border-radius:6px;" onerror="this.src=\'../assets/media/blog/blog-1.jpg\'"></td>' +
+                '<td><strong>' + c.name + '</strong><br><small class="text-muted">' + c.brand + '</small></td>' +
+                '<td>' + c.category + '</td><td>' + c.year + '</td>' +
+                '<td>$' + c.price.toLocaleString() + '</td>' +
+                '<td>' + c.fuel + '</td>' +
+                '<td>' + statusBadge + '</td>' +
+                '<td>' +
+                '<button class="btn btn-sm btn-outline-primary me-1" onclick="editCar(' + c.id + ')" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>' +
+                '<button class="btn btn-sm btn-outline-' + (c.status === 'Draft' ? 'success' : 'warning') + ' me-1" onclick="togglePublish(' + c.id + ',\'' + c.status + '\')" title="' + (c.status === 'Draft' ? 'Publish' : 'Unpublish') + '"><i class="fa-solid fa-' + (c.status === 'Draft' ? 'globe' : 'eye-slash') + '"></i></button>' +
+                '<button class="btn btn-sm btn-outline-danger" onclick="deleteCar(' + c.id + ')" title="Delete"><i class="fa-solid fa-trash"></i></button>' +
+                '</td></tr>';
+        }).join('');
+    }
+
+    function clearForm() {
+        editingId = null;
+        uploadedImageData = null;
+        document.getElementById('car-id').value = '';
+        document.getElementById('car-form').reset();
+        document.querySelectorAll('.gallery-url').forEach(function(inp) { inp.value = ''; });
+        document.getElementById('car-category-custom').classList.add('d-none');
+        document.getElementById('img-preview').classList.remove('visible');
+        document.getElementById('modal-title').textContent = 'Add New Car';
+        document.getElementById('save-btn').innerHTML = '<i class="fa-solid fa-globe me-1"></i>Publish Car';
+    }
+
+    async function editCar(id) {
+        var car = await CarStore.getById(id);
+        if (!car) return;
+        editingId = id;
+        uploadedImageData = null;
+        document.getElementById('modal-title').textContent = 'Edit Car';
+        document.getElementById('car-id').value = car.id;
+        document.getElementById('car-name').value = car.name;
+        document.getElementById('car-brand').value = car.brand;
+
+        // Reload categories then set the car's category value
+        await loadCategories();
+        var catSel = document.getElementById('car-category');
+        catSel.value = car.category || '';
+        // If category not found in dropdown (added directly via DB), insert it temporarily
+        if (car.category && catSel.value !== car.category) {
+            var tempOpt = document.createElement('option');
+            tempOpt.value = car.category;
+            tempOpt.textContent = car.category;
+            catSel.insertBefore(tempOpt, catSel.querySelector('[value="__custom__"]') || catSel.lastElementChild);
+            catSel.value = car.category;
+        }
+
+        document.getElementById('car-year').value = car.year;
+        document.getElementById('car-price').value = car.price;
+        document.getElementById('car-mileage').value = car.mileage;
+        document.getElementById('car-fuel').value = car.fuel;
+        document.getElementById('car-transmission').value = car.transmission;
+        document.getElementById('car-condition').value = car.condition;
+        document.getElementById('car-status').value = car.status || 'Available';
+        document.getElementById('car-engine').value = car.engine || '';
+        document.getElementById('car-hp').value = car.horsepower || '';
+        document.getElementById('car-color').value = car.color || '';
+        document.getElementById('car-thumbnail').value = car.thumbnail || '';
+        // Populate gallery images (excluding thumbnail)
+        var galleryInputs = document.querySelectorAll('.gallery-url');
+        var galleryImgs = Array.isArray(car.images) ? car.images.filter(function(u) { return u && u !== car.thumbnail; }) : [];
+        galleryInputs.forEach(function(inp, idx) { inp.value = galleryImgs[idx] || ''; });
+        document.getElementById('car-description').value = car.description || '';
+        document.getElementById('car-badge').value = car.badge || '';
+        document.getElementById('save-btn').innerHTML = '<i class="fa-solid fa-floppy-disk me-1"></i>Save Changes';
+        previewFromUrl(car.thumbnail);
+        modal.show();
+    }
+
+    async function togglePublish(id, currentStatus) {
+        var newStatus = currentStatus === 'Draft' ? 'Available' : 'Draft';
+        var label = currentStatus === 'Draft' ? 'publish' : 'unpublish (set to Draft)';
+        if (!confirm('Are you sure you want to ' + label + ' this car?')) return;
+        await CarStore.updateStatus(id, newStatus);
+        renderCars();
+    }
+
+    async function deleteCar(id) {
+        if (confirm('Delete this car? This cannot be undone.')) {
+            await CarStore.delete(id);
+            renderCars();
+        }
+    }
+
+    async function saveCar(targetStatus) {
+        var category = getCategory();
+        if (!category) { alert('Please select a category before saving.'); return; }
+
+        var car = {
+            id: editingId ? parseInt(document.getElementById('car-id').value) : null,
+            name: document.getElementById('car-name').value.trim(),
+            brand: document.getElementById('car-brand').value.trim(),
+            category: category,
+            year: parseInt(document.getElementById('car-year').value),
+            price: parseFloat(document.getElementById('car-price').value),
+            mileage: parseInt(document.getElementById('car-mileage').value) || 0,
+            fuel: document.getElementById('car-fuel').value,
+            transmission: document.getElementById('car-transmission').value,
+            condition: document.getElementById('car-condition').value,
+            status: targetStatus || document.getElementById('car-status').value || 'Available',
+            engine: document.getElementById('car-engine').value,
+            horsepower: parseInt(document.getElementById('car-hp').value) || 0,
+            color: document.getElementById('car-color').value,
+            thumbnail: getThumbnail(),
+            description: document.getElementById('car-description').value,
+            badge: document.getElementById('car-badge').value || null,
+            images: (function() {
+                var thumb = getThumbnail();
+                var gallery = Array.from(document.querySelectorAll('.gallery-url')).map(function(i) { return i.value.trim(); }).filter(Boolean);
+                return [thumb].concat(gallery).filter(Boolean);
+            }()),
+            rating: 4.5,
+            reviews: 0
+        };
+
+        var saveBtn = document.getElementById('save-btn');
+        var draftBtn = document.getElementById('save-draft-btn');
+        saveBtn.disabled = true;
+        draftBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+
+        try {
+            var result = await CarStore.save(car);
+            if (result) {
+                modal.hide();
+                clearForm();
+                showToast(editingId ? 'Car updated successfully!' : 'Car added successfully!', 'success');
+                renderCars();
+            } else {
+                showToast('Save failed. Check your Supabase connection or RLS settings.', 'danger');
+            }
+        } catch(err) {
+            showToast('Error: ' + (err.message || 'Unknown error'), 'danger');
+        } finally {
+            saveBtn.disabled = false;
+            draftBtn.disabled = false;
+            saveBtn.innerHTML = editingId ? '<i class="fa-solid fa-floppy-disk me-1"></i>Save Changes' : '<i class="fa-solid fa-globe me-1"></i>Publish Car';
+        }
+    }
+
+    document.getElementById('btn-add-car').addEventListener('click', function() { clearForm(); modal.show(); });
+
+    document.getElementById('car-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        await saveCar(document.getElementById('car-status').value);
+        document.getElementById('save-btn').disabled = false;
+        document.getElementById('save-draft-btn').disabled = false;
+    });
+
+    document.getElementById('save-draft-btn').addEventListener('click', async function() {
+        var name = document.getElementById('car-name').value;
+        var brand = document.getElementById('car-brand').value;
+        var price = document.getElementById('car-price').value;
+        var year = document.getElementById('car-year').value;
+        var fuel = document.getElementById('car-fuel').value;
+        if (!name || !brand || !price || !year || !fuel) {
+            alert('Please fill in the required fields (Name, Brand, Year, Price, Fuel) before saving as Draft.');
+            return;
+        }
+        await saveCar('Draft');
+        document.getElementById('save-btn').disabled = false;
+        document.getElementById('save-draft-btn').disabled = false;
+    });
+
+    document.getElementById('car-search').addEventListener('keyup', renderCars);
+    document.getElementById('filter-status').addEventListener('change', renderCars);
+    loadCategories();
+    renderCars();
+
+    // ── Toast helper ──────────────────────────────────────────────────────────
+    function showToast(msg, type) {
+        var toastEl = document.getElementById('admin-toast');
+        var msgEl   = document.getElementById('toast-msg');
+        msgEl.textContent = msg;
+        toastEl.className = 'toast align-items-center text-white border-0 bg-' + (type || 'success');
+        var t = new bootstrap.Toast(toastEl, { delay: 4000 });
+        t.show();
+    }
+</script>
+<!-- Toast notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+  <div id="admin-toast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive">
+    <div class="d-flex">
+      <div class="toast-body fw-semibold" id="toast-msg">Saved!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div></body>
+</html>

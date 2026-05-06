@@ -1,0 +1,373 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Request a Car - CarVoyage</title>
+    <meta name="description" content="Can't find the car you want? Submit a request and CarVoyage will source it for you.">
+    <link rel="shortcut icon" href="assets/media/favicon.png">
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <style>
+        .req-hero { background: linear-gradient(135deg,#0a0a0a 0%,#1a1a2e 100%); padding:70px 0 50px; text-align:center; }
+        .req-card { background:#fff; border-radius:16px; padding:36px; box-shadow:0 4px 28px rgba(0,0,0,0.09); }
+        .req-info { background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:16px; padding:36px; color:#fff; height:100%; }
+        .req-info .info-item { display:flex; gap:16px; margin-bottom:28px; align-items:flex-start; }
+        .req-info .info-icon { width:48px;height:48px;background:rgba(245,166,35,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+        .req-badge { display:inline-block;background:rgba(245,166,35,0.15);color:#f5a623;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px; }
+        .success-box { background:#d1fae5;border:1px solid #34d399;border-radius:12px;padding:28px;text-align:center; }
+    </style>
+</head>
+<body>
+        <!-- HEADER MENU START -->
+        <header class="header">
+            <div class="container-fluid">
+                <nav class="navigation d-flex align-items-center justify-content-between py-16">
+                    <a href="index.html" class="d-flex align-items-center">
+                        <img src="assets/media/favicon.png" alt="/logo" class="header-logo">
+                    </a>
+                    <div class="menu-button-right">
+                        <div class="main-menu__nav">
+                            <ul class="main-menu__list">
+                                <li>
+                                    <a href="index.html">Home</a>
+                                </li>
+
+                                <li>
+                                    <a href="about.html">About Us</a>
+                                </li>
+
+                                <li class="dropdown">
+                                    <a href="javascript:void(0); " class="active">Catalogue</a>
+                                    <ul>
+                                        <li> <a href="cars.html">Cars</a></li>
+
+                                    </ul>
+                                </li>
+
+                                
+
+                                <li>
+                                    <a href="contact.html">Contact Us</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="main-menu__right">
+                        <div class="search-heart-icon d-sm-flex d-none align-items-center gap-24">
+
+                            <a class="cus-btn" href="cars.html">
+                                <span class="text">Explore Now</span>
+
+                            <a class="cus-btn" href="request-car.html">
+                                <span class="text">Request a Car</span>
+
+                                <span class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                                        fill="none">
+                                        <g clip-path="url(#clip0_11617_5921)">
+                                            <path
+                                                d="M19.8283 0.171647C19.6626 0.00586635 19.4139 -0.0451101 19.1964 0.041921L0.368279 7.57308C0.15285 7.65925 0.00859201 7.86441 0.000310775 8.09632C-0.0079314 8.32819 0.121443 8.54308 0.330193 8.64433L7.59869 12.1695C7.69975 12.2185 7.78136 12.3001 7.83038 12.4012L11.3556 19.6697C11.4538 19.8722 11.6588 19.9999 11.8826 19.9999C11.8896 19.9999 11.8966 19.9998 11.9036 19.9995C12.1354 19.9913 12.3406 19.847 12.4268 19.6316L19.958 0.803599C20.045 0.585943 19.9941 0.337389 19.8283 0.171647ZM3.05307 8.66246C2.66232 8.47294 2.68234 7.90963 3.08557 7.74834L14.7194 3.09485C15.2242 2.89292 15.6431 3.52817 15.2586 3.91264L8.32537 10.8459C8.17476 10.9965 7.94527 11.0351 7.75363 10.9422L3.05307 8.66246ZM12.2516 16.9143C12.0903 17.3176 11.5269 17.3376 11.3374 16.9468L9.05767 12.2462C8.96473 12.0545 9.00339 11.8251 9.154 11.6744L16.0873 4.7412C16.4718 4.35673 17.1071 4.77562 16.9051 5.28045L12.2516 16.9143Z"
+                                                fill="#FAB637" />
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_11617_5921">
+                                                <rect width="20" height="20" fill="white" />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                </span>
+                            </a>
+
+                        </div>
+                        
+                        <a href="" class="d-xl-none d-flex main-menu__toggler mobile-nav__toggler">
+                            <img src="assets/media/icons/menu-2.png" alt="">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- HEADER MENU END -->
+
+<!-- HERO -->
+<section class="req-hero">
+    <div class="container">
+        <span class="req-badge">Can't Find What You're Looking For?</span>
+        <h2 style="color:#fff;font-weight:700;font-size:2.4rem;margin-bottom:12px;">Request Your Dream Car</h2>
+        <p style="color:rgba(255,255,255,0.65);max-width:560px;margin:0 auto;">Tell us exactly what you want. Our team will source it and get back to you within 24 hours.</p>
+    </div>
+</section>
+
+<!-- FORM SECTION -->
+<section style="padding:80px 0;background:#f8f9fa;">
+    <div class="container">
+        <div class="row g-5">
+
+            <!-- Info Panel -->
+            <div class="col-lg-4">
+                <div class="req-info">
+                    <h5 style="font-weight:700;margin-bottom:8px;">How It Works</h5>
+                    <p style="color:rgba(255,255,255,0.6);font-size:14px;margin-bottom:28px;">It's simple. Fill the form and we'll do the rest.</p>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-file-pen" style="color:#f5a623;"></i></div>
+                        <div>
+                            <p style="font-weight:600;margin-bottom:4px;">1. Submit Request</p>
+                            <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0;">Tell us your preferred make, model, budget and requirements.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-magnifying-glass" style="color:#f5a623;"></i></div>
+                        <div>
+                            <p style="font-weight:600;margin-bottom:4px;">2. We Source It</p>
+                            <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0;">Our team searches our network to find your ideal car.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-phone" style="color:#f5a623;"></i></div>
+                        <div>
+                            <p style="font-weight:600;margin-bottom:4px;">3. We Contact You</p>
+                            <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0;">We'll call or email you within 24 hours with options.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa-solid fa-handshake" style="color:#f5a623;"></i></div>
+                        <div>
+                            <p style="font-weight:600;margin-bottom:4px;">4. Close the Deal</p>
+                            <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0;">Agree on a price and we handle all the paperwork.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Request Form -->
+            <div class="col-lg-8">
+                <div class="req-card">
+                    <h4 style="font-weight:700;color:#1a1a2e;margin-bottom:6px;">Car Request Form</h4>
+                    <p style="color:#6b7280;font-size:14px;margin-bottom:28px;">All fields marked <span class="text-danger">*</span> are required.</p>
+
+                    <div id="request-success" class="success-box d-none">
+                        <i class="fa-solid fa-circle-check fa-3x" style="color:#059669;margin-bottom:14px;display:block;"></i>
+                        <h5 style="color:#065f46;font-weight:700;">Request Sent!</h5>
+                        <p style="color:#047857;margin-bottom:16px;">We've received your car request and will contact you within 24 hours.</p>
+                        <a href="cars.html" class="btn btn-sm" style="background:#059669;color:#fff;border-radius:8px;padding:8px 20px;">Browse Current Stock</a>
+                    </div>
+
+                    <form id="request-form" novalidate>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">First Name <span class="text-danger">*</span></label>
+                                <input type="text" id="r-fname" class="form-control" placeholder="John" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" id="r-lname" class="form-control" placeholder="Doe" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Email <span class="text-danger">*</span></label>
+                                <input type="email" id="r-email" class="form-control" placeholder="john@example.com" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Phone <span class="text-danger">*</span></label>
+                                <input type="tel" id="r-phone" class="form-control" placeholder="+1 555 000 0000" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Preferred Make / Brand <span class="text-danger">*</span></label>
+                                <input type="text" id="r-make" class="form-control" placeholder="e.g. Toyota, BMW, Mercedes">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Preferred Model</label>
+                                <input type="text" id="r-model" class="form-control" placeholder="e.g. Camry, X5, C-Class">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Year Range</label>
+                                <input type="text" id="r-year" class="form-control" placeholder="e.g. 2020–2024">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Maximum Budget (USD)</label>
+                                <input type="number" id="r-budget" class="form-control" placeholder="e.g. 45000">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Fuel Preference</label>
+                                <select id="r-fuel" class="form-select">
+                                    <option value="">Any</option>
+                                    <option>Petrol</option><option>Diesel</option>
+                                    <option>Electric</option><option>Hybrid</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Transmission Preference</label>
+                                <select id="r-transmission" class="form-select">
+                                    <option value="">Any</option>
+                                    <option>Automatic</option><option>Manual</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold" style="font-size:13px;">Additional Requirements / Notes</label>
+                                <textarea id="r-notes" class="form-control" rows="4" placeholder="Any specific features, colour preferences, or other requirements..."></textarea>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button type="submit" id="r-submit-btn" class="cus-btn" style="width:100%;justify-content:center;padding:14px;font-size:1rem;">
+                                    <span id="r-btn-text"><i class="fa-solid fa-paper-plane me-2"></i>Submit Car Request</span>
+                                    <span id="r-btn-spin" class="spinner-border spinner-border-sm ms-2 d-none"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER (same as other pages) -->
+        <!-- FOOTER START -->
+        <footer class="footer">
+            <div class="">
+                <div class="footer-wrapper">
+                    <div class="footer-sec-1">
+                        <div class="mb-96">
+                            <img class="mb-24" src="assets/media/footer-logo.png" alt="">
+                            <p class="fw-600 lightest-gray mb-48">The first free end-to-end analytics service for the
+                                site,<br>
+                                designed to
+                                work with enterprises.</p>
+                            <a href="contact.html" class="cus-btn-2">Learn More</a>
+                        </div>
+                        <div>
+                            <p class="color-primary fw-600 mb-16">News Letter</p>
+                            <form action="index.html" method="post">
+                                <div class="newsletter">
+                                    <input type="email" id="newsletter" class="form-control newsletter-form"
+                                        placeholder="Your Email ID">
+                                    <button type="submit" class="border-0 rounded-0 cus-btn-2">Submit</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="footer-sec-2">
+                        <div class="content-info">
+                            <div class="addresse">
+                                <p class="fw-600 color-primary mb-24">Address</p>
+                                <p class="white mb-24">24, Main Road Mississippi<br>
+                                    United States - 24185 15 </p>
+                                <p class="white">65, Main Boulevard Tennesi<br>
+                                    United States - 25491 28 </p>
+                            </div>
+                            <div class="contect-number">
+                                <div>
+                                    <p class="fw-600 color-primary mb-16">Contact</p>
+                                </div>
+                                <div>
+                                    <a href="tel:+13232751718" class="hover-content white">+1 (323) 275-1718</a><br>
+                                    <a href="mailto:hello@logoipsum.com"
+                                        class="hover-content white">hello@logoipsum.com</a>
+                                </div>
+                            </div>
+                            <div class="footer-social-icon">
+                                <div>
+                                    <p class="color-primary mb-16 fw-600">Follow us</p>
+                                </div>
+                                <div class="links">
+
+                                    <a href="" class="menu-link-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                      <g clip-path="url(#clip0_11680_3832)">
+                        <path
+                          d="M14.6875 5.16602C15.0109 5.16602 15.2734 4.90352 15.2734 4.58008V1.06445C15.2734 0.741016 15.0109 0.478516 14.6875 0.478516H11.1719C8.91016 0.478516 7.07031 2.31836 7.07031 4.58008V7.50977H5.3125C4.98906 7.50977 4.72656 7.77227 4.72656 8.0957V11.6113C4.72656 11.9348 4.98906 12.1973 5.3125 12.1973H7.07031V19.8926C7.07031 20.216 7.33281 20.4785 7.65625 20.4785H11.1719C11.4953 20.4785 11.7578 20.216 11.7578 19.8926V12.1973H14.1016C14.3879 12.1973 14.6324 11.9902 14.6797 11.7078L15.2656 8.19219C15.2938 8.02227 15.2461 7.84844 15.1348 7.7168C15.0234 7.58555 14.8598 7.50977 14.6875 7.50977H11.7578V5.16602H14.6875ZM11.1719 8.68164H13.9957L13.6051 11.0254H11.1719C10.8484 11.0254 10.5859 11.2879 10.5859 11.6113V19.3066H8.24219V11.6113C8.24219 11.2879 7.97969 11.0254 7.65625 11.0254H5.89844V8.68164H7.65625C7.97969 8.68164 8.24219 8.41914 8.24219 8.0957V4.58008C8.24219 2.96484 9.55664 1.65039 11.1719 1.65039H14.1016V3.99414H11.1719C10.8484 3.99414 10.5859 4.25664 10.5859 4.58008V8.0957C10.5859 8.41914 10.8484 8.68164 11.1719 8.68164Z"
+                          fill="#FAFAFA" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_11680_3832">
+                          <rect width="20" height="20" fill="white" transform="translate(0 0.478516)" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </a>
+                                    <a href="" class="menu-link-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
+                      <path
+                        d="M1.4149 9.08847C6.7836 6.26603 10.3636 4.4053 12.1548 3.50629C17.2692 0.939429 18.3319 0.493539 19.0246 0.478658C19.1769 0.475577 19.5176 0.521135 19.7382 0.737176C19.9245 0.919597 19.9758 1.16602 20.0003 1.33898C20.0249 1.51193 20.0554 1.90593 20.0311 2.21379C19.754 5.72762 18.5547 14.2548 17.9446 18.1903C17.6865 19.8556 17.1782 20.414 16.6861 20.4686C15.6166 20.5874 14.8045 19.6158 13.7687 18.7964C12.1478 17.5144 11.2321 16.7163 9.65879 15.4652C7.84054 14.0194 9.01924 13.2247 10.0555 11.9261C10.3266 11.5862 15.0387 6.41446 15.1299 5.9453C15.1413 5.88663 15.1519 5.66791 15.0442 5.55242C14.9366 5.43693 14.7776 5.47642 14.6629 5.50783C14.5004 5.55235 11.911 7.61751 6.89487 11.7033C6.15989 12.3123 5.49417 12.609 4.89771 12.5935C4.24015 12.5763 2.97528 12.1448 2.03498 11.776C0.881668 11.3236 -0.0349644 11.0845 0.0448537 10.3162C0.0864279 9.91604 0.543112 9.50679 1.4149 9.08847Z"
+                        fill="#EAEAEC" />
+                    </svg>
+                  </a>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="subtitle fw-400 lightest-gray">© 2026 — Copyright</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- FOOTER END -->
+
+    <script src="assets/js/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/vendor/bootstrap.min.js"></script>
+<script>
+        // Pre-fill from URL params if coming from a car detail page
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        var name = params.get('name');
+        if (name) {
+            var makeInput = document.getElementById('r-make');
+            if (makeInput) makeInput.value = name;
+            // Also update page title
+            var h2 = document.querySelector('.req-hero h2');
+            if (h2) h2.textContent = 'Request: ' + name;
+        }
+    })();
+    document.getElementById('request-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var fname  = document.getElementById('r-fname').value.trim();
+        var lname  = document.getElementById('r-lname').value.trim();
+        var email  = document.getElementById('r-email').value.trim();
+        var phone  = document.getElementById('r-phone').value.trim();
+        var make   = document.getElementById('r-make').value.trim();
+        if (!fname || !email || !phone || !make) { alert('Please fill in all required fields.'); return; }
+
+        var btn  = document.getElementById('r-submit-btn');
+        var txt  = document.getElementById('r-btn-text');
+        var spin = document.getElementById('r-btn-spin');
+        btn.disabled = true; txt.innerHTML = 'Sending...'; spin.classList.remove('d-none');
+
+        var details = [
+            'Make/Brand: ' + make,
+            'Model: '      + (document.getElementById('r-model').value || 'Any'),
+            'Year Range: ' + (document.getElementById('r-year').value  || 'Any'),
+            'Budget: '     + (document.getElementById('r-budget').value ? '$' + document.getElementById('r-budget').value : 'Not specified'),
+            'Fuel: '       + (document.getElementById('r-fuel').value  || 'Any'),
+            'Trans: '      + (document.getElementById('r-transmission').value || 'Any'),
+            'Notes: '      + (document.getElementById('r-notes').value || 'None')
+        ].join('\n');
+
+        try {
+            var result = await OrderStore.submit({
+                car_id:        null,
+                car_name:      '[CAR REQUEST] ' + make + ' ' + (document.getElementById('r-model').value || ''),
+                customer_name: fname + ' ' + lname,
+                email:         email,
+                phone:         phone,
+                message:       details,
+                total_price:   parseFloat(document.getElementById('r-budget').value) || 0,
+                status:        'New'
+            });
+            if (result) {
+                document.getElementById('request-form').style.display = 'none';
+                document.getElementById('request-success').classList.remove('d-none');
+            } else {
+                alert('Something went wrong. Please try again or contact us directly.');
+            }
+        } catch(err) {
+            alert('Error: ' + (err.message || 'Unknown error'));
+        } finally {
+            btn.disabled = false; spin.classList.add('d-none');
+            txt.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i>Submit Car Request';
+        }
+    });
+</script>
+</body>
+</html>

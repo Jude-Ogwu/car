@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login — Vehicle Dealers Hub</title>
+    <link rel="shortcut icon" href="../assets/media/favicon.png">
+    <link rel="stylesheet" href="../assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-login-body">
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="../assets/media/favicon.png" alt="Vehicle Dealers Hub">
+            </div>
+            <h4 class="login-title">Admin Panel</h4>
+            <p class="login-sub">Sign in to manage your inventory & orders</p>
+
+            <div id="login-error" class="alert alert-danger d-none" role="alert">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>Invalid username or password.
+            </div>
+
+            <form id="login-form" autocomplete="off">
+                <div class="mb-4">
+                    <label class="form-label admin-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text admin-input-icon"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" id="username" class="form-control admin-input" placeholder="admin" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label admin-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text admin-input-icon"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="password" class="form-control admin-input" placeholder="••••••••••" required>
+                        <button type="button" class="input-group-text admin-input-icon" id="toggle-pass" style="cursor:pointer;">
+                            <i class="fa-solid fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3 text-end">
+                    <small class="text-muted">Default: admin / Vehicle Dealers Hub2024</small>
+                </div>
+                <button type="submit" class="btn btn-admin-login w-100" id="login-btn">
+                    <span id="login-text"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In</span>
+                    <span id="login-spinner" class="d-none"><span class="spinner-border spinner-border-sm"></span> Signing in...</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <a href="../index.html"><i class="fa-solid fa-arrow-left me-1"></i>Back to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/data.js"></script>
+    <script>
+        // Redirect if already logged in
+        if (typeof AdminAuth !== 'undefined' && AdminAuth.isLoggedIn()) window.location.href = 'dashboard.html';
+
+        document.getElementById('toggle-pass').addEventListener('click', function() {
+            var inp = document.getElementById('password');
+            var icon = document.getElementById('eye-icon');
+            if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
+            else { inp.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var username = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value;
+            var btn = document.getElementById('login-btn');
+            var errEl = document.getElementById('login-error');
+
+            btn.disabled = true;
+            document.getElementById('login-text').classList.add('d-none');
+            document.getElementById('login-spinner').classList.remove('d-none');
+
+                        setTimeout(function() {
+                try {
+                    let success = AdminAuth.login(username, password);
+                    if (success) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        errEl.classList.remove('d-none');
+                        btn.disabled = false;
+                        document.getElementById('login-text').classList.remove('d-none');
+                        document.getElementById('login-spinner').classList.add('d-none');
+                    }
+                } catch (e) {
+                    alert('Login Error: ' + e.message);
+                    btn.disabled = false;
+                    document.getElementById('login-text').classList.remove('d-none');
+                    document.getElementById('login-spinner').classList.add('d-none');
+                }
+            }, 800);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
